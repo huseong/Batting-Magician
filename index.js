@@ -1,5 +1,8 @@
 require('dotenv').config()
 const Server = require('socket.io')
-const mainServer = require('./src/test.js')
+const frontServer = require('./src/server/frontServer.js')
+const lobbyServer = require('./src/server/lobbyServer.js')
 
-mainServer(new Server(process.env.PORT))
+frontServer(new Server(process.env.FRONTPORT))
+lobbyServer(new Server(process.env.LOBBYPORT))
+

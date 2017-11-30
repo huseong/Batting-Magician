@@ -1,7 +1,6 @@
 {
   "name": "bm-server",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,6 +9,16 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^4.0.0",
+    "mongoose": "^4.13.5",
     "socket.io": "^1.7.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huseong/Batting-Magician.git"
+  },
+  "bugs": {
+    "url": "https://github.com/huseong/Batting-Magician/issues"
+  },
+  "homepage": "https://github.com/huseong/Batting-Magician#readme",
+  "description": ""
 }
