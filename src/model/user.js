@@ -11,7 +11,7 @@ const schema = new mongoose.Schema({
 })
 
 schema.statics.create = (id, name) => {
-    const user = new user({
+    const newUser = new user({
         userInfo : {
             id : id,
             name : name,
@@ -21,7 +21,7 @@ schema.statics.create = (id, name) => {
             room : 0
         }
     })
-    user.save(err => {
+    newUser.save(err => {
         console.log('User Save Error : ' + err)
     })
 }
