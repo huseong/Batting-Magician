@@ -5,6 +5,7 @@
 const User = require('../../model/user.js')
 const Hack = require('../../model/hack.js')
 const signUp = require('./signUp.js')
+const toLobbyServer = require('./toLobbyServer.js')
 module.exports = socket => 
   new Promise((resolve, reject) => {
     if(!socket.isVersionChecked)
@@ -14,10 +15,12 @@ module.exports = socket =>
       User.findOne({userInfo : { id : id }}, (err, user) => {
         if(err) console.log('DB Error : ', err)
         if(!user) { // 만약 유저를 찾을 수 없다면 -> 아직 가입 안한 유저라면
-          signUp(socket, id)
-          .then(resolve)
+          return signUp(socket, id)
+          .then(toLobbyServer)
           .catch(reject)
         }
+        user.lastEnter = Date.now()
+        toLobbyServer(socket, user)
       })
     })
   })
