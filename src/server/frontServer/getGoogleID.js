@@ -5,7 +5,6 @@
 const User = require('../../model/user.js')
 const Hack = require('../../model/hack.js')
 const signUp = require('./signUp.js')
-const toLobbyServer = require('./toLobbyServer.js')
 module.exports = socket => 
   new Promise((resolve, reject) => {
     if(!socket.isVersionChecked)
@@ -20,7 +19,13 @@ module.exports = socket =>
           .catch(reject)
         }
         user.lastEnter = Date.now()
+        socket.removeAllListeners('google id')
         toLobbyServer(socket, user)
       })
     })
   })
+
+const toLobbyServer = (socket, user) => {
+  user.currentStatus = 'Lobby'
+  socket.emit('to lobby server')
+}
