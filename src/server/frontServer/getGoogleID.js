@@ -4,15 +4,22 @@
 */
 const User = require('../../model/user.js')
 const Hack = require('../../model/hack.js')
+const Error = require('../../model/error.js')
 const signUp = require('./signUp.js')
+const getGoogleID = require('../../util/getGoogleID.js')
 module.exports = socket => 
   new Promise((resolve, reject) => {
-    if(!socket.isVersionChecked)
+    if(!socket.isVersionChecked) {
       Hack.create('Version Check Skip')
-    socket.emit('google id') // 구글 아이디 요청
-    socket.on('google id', ({id}) => {
+      return reject(socket)
+    }
+    getGoogleID(socket)
+    .then(id => {
       User.findOne({userInfo : { id : id }}, (err, user) => {
-        if(err) console.log('DB Error : ', err)
+        if(err) {
+          Error.create('User DB Error')
+          return reject(socket)
+        }
         if(!user) { // 만약 유저를 찾을 수 없다면 -> 아직 가입 안한 유저라면
           return signUp(socket, id)
           .then(toLobbyServer)

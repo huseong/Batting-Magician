@@ -49,7 +49,8 @@ schema.statics.checkStatus = (socket, status) =>
         if(user.info.status === status) {
           resolve(socket, user)
         } else {
-          reject(socket, user)
+          Hack.create('Location Hack', user, id)
+          reject(socket)
         }
       })
     })
