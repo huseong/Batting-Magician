@@ -14,14 +14,13 @@ const schema = new mongoose.Schema({
 })
 
 schema.statics.create = (id, name) => {
-  const date = new Date()
   const newUser = new user({
     info : {
         id : id,
         name : name,
         money : 0,
         isBanned : false,
-        lastEnter : date.toFormat('YYYY-MM-DD HH24:MI:SS')
+        lastEnter : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS')
     },
     currentStatus : {
         server : 'Lobby'
