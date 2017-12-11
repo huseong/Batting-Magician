@@ -2,6 +2,14 @@
 */
 
 const Match = require('../../../model/match.js')
-module.exports = (matchingUsers) => {
-  
-}
+module.exports = (server, matchingUsers) => 
+  new Promise((resolve, reject) => {
+    Match.create(server, matchingUsers.map(socket => socket.user), 'Standard')
+    .then(match => {
+      matchingUsers.forEach(socket => {
+        socket.emit('standard match made', match.toUserInfo())
+        socket.join(match.meta.id)
+      });
+    })
+    .then(resolve)
+  })

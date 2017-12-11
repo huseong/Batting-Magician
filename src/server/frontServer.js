@@ -1,11 +1,12 @@
 const checkVersion = require('./frontServer/checkVersion.js')
-const getGoogleID = require('./frontServer/getGoogleID.js')
+const auth = require('./frontServer/auth.js')
 
 module.exports = io => {
   console.log('Front Server On!')
   io.on('connect', socket => {
+    console.log('server connected. id : ', socket.id)
     checkVersion(socket)
-    .then(getGoogleID)
+    .then(auth)
     .catch(socket => socket.disconnect(true))
   })
 }

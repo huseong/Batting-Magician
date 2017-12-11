@@ -26,6 +26,10 @@ module.exports = socket =>
           .catch(reject)
         }
         user.lastEnter = Date.now()
+        user.save(err => {
+          Error.create('User DB Error')
+          return reject(socket)
+        })
         socket.removeAllListeners('google id')
         toLobbyServer(socket, user)
       })

@@ -3,12 +3,18 @@
 만약 문제가 없다면 다음으로 넘어간다.
 문제가 있다면 그냥 한다.
 */
+const serverVersion = '0.0.1'
 module.exports = socket =>  // 클라이언트의 버전을 확인하는 함수
   new Promise((resolve, reject) => {
   socket.isVersionChecked = false
   socket.emit('version') // 클라이언트에 버전 요청을 보냄.
+  setTimeout(() => {
+    if(!socket.isVersionChecked) {
+      reject(socket)
+    }
+  }, 5000)
   socket.on('version', ({ version }) => {
-    console.log(version)
+    console.log('Client Version : ', version)
     const isCurrentVersion = serverVersion === version
     socket.emit('version result', { result: isCurrentVersion})
     if(!isCurrentVersion)

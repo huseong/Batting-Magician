@@ -1,7 +1,9 @@
 /* TODO: matching 풀에 유저 등록, 또는  */
-const User = require('../../model/user')
+const User = require('../../../model/user.js')
 const createStandardMatch = require('./createStandardMatch.js')
 const matchingUsers = []
+const waitingMatches = []
+const maxStandardMatch = 50
 var lastRoomID = require('../../../model/server.js')
 module.exports = socket => {
   socket.on('add standard pool', () => {
@@ -10,14 +12,21 @@ module.exports = socket => {
       user.info.status = 'Matching'
       socket.user = user
       matchingUsers.push(socket)
-      if(matchingUsers.length === 50) {
+      waitingMatches.forEach(match => {
+        if(match.info.users < maxStandardMatch) {
+          match.info.users.push()
+        }
+      })
+      if(matchingUsers.length === maxStandardMatch) {
         createStandardMatch(matchingUsers)
-        .then(clearMatchingUsers)
+        .then(match => {
+          waitingMatches.push(match)
+        })
       }
     })
   })
 }
 
 const clearMatchingUsers = () => {
-  matchingUsers = []
+  matchingUsers = matchingUsers.slice(50)
 }

@@ -1,9 +1,11 @@
 /* TODO: 경마장 각각에 대한 모듈이다.
 */
+require('date-utils')
 
 const mongoose = require('mongoose')
 const Error = require('./error.js')
-require('date-utils')
+const randomHorse = require('../server/lobbyServer/standard/randomHorse.js')
+
 const schema = new mongoose.Schema({
   meta : {
     id : Number, // 해당 방에 대한 고유 식별자이다.
@@ -19,25 +21,38 @@ const schema = new mongoose.Schema({
   }
 })
 
-let currentRoomID = 1 // 방 번호이다. 매번 하나씩 늘어난다.
-
-schema.statics.create = (server, type, users) => {
-  let newMatch = new room({
-    meta : {
-      id : server.getRoomID,
-      serverName : server.info.name,
-      date : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS'),
-      name : '후성배 경마 경주',
-      type : type
-    },
-    info : {
-      users : users.map(user => user.id),
-      status : 'Wait',
-      
-    }
-  })
+schema.methods.toUserInfo = function() {
+  let param = {
+    userCount : this.info.users.length,
+    status : this.info.users.status,
+    horses : this.info.users.horses
+  }
+  return param
 }
 
-const room = mongoose.model('room', room)
+schema.statics.create = (server, type, users) =>
+  new Promise((resolve, reject) => {
+    let newMatch = new room({
+      meta : {
+        id : server.getRoomID,
+        serverName : server.info.name,
+        date : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS'),
+        name : '후성배 경마 경주',
+        type : type
+      },
+      info : {
+        users : users.map(user => user.id),
+        status : 'Wait',
+        horse : randomHorse(type)
+      }
+    })
+    newMatch.save(err => {
+      Error.create('Match DB Error')
+      reject()
+    })
+    return resolve(newMatch)
+  })
 
-module.exports = room
+const match = mongoose.model('room', schema)
+
+module.exports = match

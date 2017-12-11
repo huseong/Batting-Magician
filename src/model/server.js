@@ -17,6 +17,6 @@ schema.methods.getRoomID = function() {
     return id
 }
 
-const server = mongoose.model('server', server)
+const server = mongoose.model('server', schema)
 
 module.exports = server
