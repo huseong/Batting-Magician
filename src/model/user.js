@@ -9,29 +9,46 @@ const schema = new mongoose.Schema({
     money : Number,
     isBanned : Boolean,
     lastEnter : Date,
-    status : String
+    status : String,
+    friend : Array
+  },
+  bank : {
+    isSaving : Boolean, // 저축중인지
+    savingDate : Date, // 저축 시작한지 얼마나 됬는지
+    amount : Number // 저축한 양
   }
 })
 
-schema.statics.create = (id, name) => {
-  const newUser = new user({
-    info : {
-        id : id,
-        name : name,
-        money : 0,
-        isBanned : false,
-        lastEnter : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS')
-    },
-    currentStatus : {
-        server : 'Lobby'
-    }
+schema.statics.create = (id, name) => 
+  new Promise((resolve, reject) => {
+    user.findOne({ info : { name : name } }, (err, user) => { // 만약에 이미 같은 이름을 가진 유저가 있다면
+      if(err) {
+        Error.create('DB Error in User Create')
+      }
+      if(user) {
+        return reject()
+      }
+    })
+    const newUser = new user({
+      info : {
+          id : id,
+          name : name,
+          money : 0,
+          isBanned : false,
+          lastEnter : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS')
+      },
+      currentStatus : {
+          server : 'Lobby'
+      }
+    })
+    newUser.save(err => {
+        Error.create('User DB Error')
+    })
+    return newUser
   })
-  newUser.save(err => {
-      Error.create('User DB Error')
-  })
-  return newUser
-}
 
+
+// 유저가 해당 상태인지를 확인한다.
 schema.statics.checkStatus = (socket, status) =>
   new Promise((resolve, reject) => {
     socket.emit('get google')
