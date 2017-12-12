@@ -5,27 +5,28 @@ const matchingUsers = []
 const waitingMatches = []
 const maxStandardMatch = 50
 var lastRoomID = require('../../../model/server.js')
-module.exports = socket => {
-  socket.on('add standard pool', () => {
-    User.checkStatus(socket, 'Lobby')
-    .then((socket, user) => {
-      user.info.status = 'Matching'
-      socket.user = user
-      matchingUsers.push(socket)
-      waitingMatches.forEach(match => {
-        if(match.info.users < maxStandardMatch) {
-          match.info.users.push()
+module.exports = socket => 
+  new Promise((resolve, reject) => {
+    socket.on('add standard pool', () => {
+      User.checkStatus(socket, 'Lobby')
+      .then((socket, user) => {
+        user.info.status = 'Matching'
+        socket.user = user
+        matchingUsers.push(socket)
+        waitingMatches.forEach(match => {
+          if(match.info.users < maxStandardMatch) {
+            match.info.users.push()
+          }
+        })
+        if(matchingUsers.length === maxStandardMatch) {
+          createStandardMatch(matchingUsers)
+          .then(match => {
+            waitingMatches.push(match)
+          })
         }
       })
-      if(matchingUsers.length === maxStandardMatch) {
-        createStandardMatch(matchingUsers)
-        .then(match => {
-          waitingMatches.push(match)
-        })
-      }
     })
   })
-}
 
 const clearMatchingUsers = () => {
   matchingUsers = matchingUsers.slice(50)

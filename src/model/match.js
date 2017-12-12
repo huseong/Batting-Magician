@@ -4,7 +4,6 @@ require('date-utils')
 
 const mongoose = require('mongoose')
 const Error = require('./error.js')
-const randomHorse = require('../server/lobbyServer/standard/randomHorse.js')
 
 const schema = new mongoose.Schema({
   meta : {
@@ -43,7 +42,7 @@ schema.statics.create = (server, type, users) =>
       info : {
         users : users.map(user => user.id),
         status : 'Wait',
-        horse : randomHorse(type)
+        slime : []
       }
     })
     newMatch.save(err => {
