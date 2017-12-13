@@ -8,7 +8,9 @@ class Slime {
       num : num // 이 슬라임의 숫자
     }
     this.info = {
-      speed : 10, // 이 슬라임의 초당 이동 속도
+      hp : 200, // 슬라임의 체력
+      speed : 4, // 이 슬라임의 점프당 이동 량
+      jumpSpeed : 0.4, // 이 슬라임의 점프하는데 걸리는 시간
       location : 0, // 이 슬라임의 현 위치
       nextLodgment : 150, // 이 슬라임의 다음 거점이다.
       diceWeight : [...new Array(6)].fill(100), // 이 슬라임의 주사위 가중치
@@ -17,7 +19,7 @@ class Slime {
     }
   }
 
-  set location(val) {
+  setLocation(val) {
     this.info.location = val
     if(val >= this.info.nextLodgment) { // 만약 거점을 지났다면
       this.setSpeed()
@@ -31,8 +33,8 @@ class Slime {
     }, 0.4)
   }
 
-  setSpeed() {
-    let dice = randomDice()
+  lodgementDice() {
+    let dice = randomDice(diceWeight, diceAmountSum)
     io.to(this.meta.roomID).emit('set speed')
   }
 }
