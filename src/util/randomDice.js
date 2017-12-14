@@ -5,6 +5,6 @@ module.exports = (weights, sum) => {
   for(let i = 0; i<weights.length; i++) {
     randomValue -= weights[i]
     if(randomValue <= 0)
-      return i + 1
+      return i
   }
 }
