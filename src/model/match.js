@@ -8,7 +8,7 @@ const Error = require('./error.js')
 const schema = new mongoose.Schema({
   meta : {
     id : Number, // 해당 방에 대한 고유 식별자이다.
-    serverName : String,
+    serverName : String, // 이 방이 속한 서버의 이름
     date : Date,
     name : String,
     type : String
@@ -16,15 +16,15 @@ const schema = new mongoose.Schema({
   info : {
     users : [String],
     status : String,
-    horses : [Number]
   }
 })
 
+// TODO: 유저에게 전달해 주기 위한 매치 정보이다.
 schema.methods.toUserInfo = function() {
   let param = {
     userCount : this.info.users.length,
     status : this.info.users.status,
-    horses : this.info.users.horses
+    horses : this.info.horses
   }
   return param
 }
@@ -42,7 +42,6 @@ schema.statics.create = (server, type, users) =>
       info : {
         users : users.map(user => user.id),
         status : 'Wait',
-        slime : []
       }
     })
     newMatch.save(err => {

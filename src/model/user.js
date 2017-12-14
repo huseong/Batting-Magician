@@ -4,13 +4,14 @@ const Error = require('./error.js')
 require('date-utils')
 const schema = new mongoose.Schema({
   info : {
-    id : String,
-    name : String,
-    money : Number,
-    isBanned : Boolean,
+    id : String, // 유저의 식별자. Google ID이다.
+    name : String, // 유저의 이름
+    money : Number, // 유저가 가진 돈
+    isBanned : Boolean, // 유저가 밴이 됬는지
     lastEnter : Date,
-    status : String,
-    friend : Array
+    status : String, // 유저의 상태
+    room : String, // 유저가 방에 있다면 방의 이름
+    friend : Array // 유저의 친구 목록.
   },
   bank : {
     isSaving : Boolean, // 저축중인지
@@ -35,10 +36,9 @@ schema.statics.create = (id, name) =>
           name : name,
           money : 0,
           isBanned : false,
+          room : '',
+          status : 'Lobby',
           lastEnter : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS')
-      },
-      currentStatus : {
-          server : 'Lobby'
       }
     })
     newUser.save(err => {
@@ -48,7 +48,8 @@ schema.statics.create = (id, name) =>
   })
 
 
-// 유저가 해당 상태인지를 확인한다.
+// TODO: 유저가 해당 상태인지를 확인한다.
+// 만약 그 상태가 아니라면 핵 리스트에 추가한다.
 schema.statics.checkStatus = (socket, status) =>
   new Promise((resolve, reject) => {
     socket.emit('get google')
