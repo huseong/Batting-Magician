@@ -1,7 +1,11 @@
+// module
 const mongoose = require('mongoose')
+require('date-utils')
+
+// model
 const Hack = require('./hack.js')
 const Error = require('./error.js')
-require('date-utils')
+
 const schema = new mongoose.Schema({
   info : {
     id : String, // 유저의 식별자. Google ID이다.
@@ -46,7 +50,6 @@ schema.statics.create = (id, name) =>
     })
     return newUser
   })
-
 
 // TODO: 유저가 해당 상태인지를 확인한다.
 // 만약 그 상태가 아니라면 핵 리스트에 추가한다.

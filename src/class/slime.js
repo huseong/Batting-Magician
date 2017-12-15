@@ -24,7 +24,6 @@ class Slime {
       diceAmountSum : 600,
       delta : [...Array(6)].map((val, index) => ++index * 10) // 해당 주사위가 나왔을 때 체력이 증가할 양
     }
-    this.start()
   }
 
   set location(val) {
@@ -32,15 +31,6 @@ class Slime {
   }
 
   jump() {
-    // let a = function() {
-    //   let b = 0.2
-    //   for(let i =0; i<30; i++) {
-    //     if(b < 0.4) {
-    //       b += (0.4 - b) * 0.1
-    //     }
-    //     console.log(b)
-    //   }
-    // }
     setTimeout(() => this.jump(), this.move.jumpSpeed * 1000)
     this.move.location += this.move.speed
     if(this.move.jumpSpeed < 0.4) {

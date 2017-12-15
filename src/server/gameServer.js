@@ -5,8 +5,12 @@ module.exports = io => {
   io.on('connect', socket => {
     User.checkStatus(socket, 'Game')
     .then((socket, user) => {
-      let slimeArray = [...Array(8)].map((slime, index) => new Slime(io, '1000', index))
+      
     })
   })
+
+  async function a () {
+    slimeArray = await [...Array(8)].map((slime, index) => new Slime(io, '1000', index))
+  }
 }
 
