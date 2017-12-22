@@ -1,19 +1,20 @@
 const randomDice = require('../util/randomDice.js')
 
-class Slime {
-  constructor(io, roomID, num, serverTime) {
+class Character {
+  constructor(io, roomID, num) {
     this.meta = {
       io : io, // io 모듈
       roomID : roomID, // 이 슬라임이 속한 방의 ID
       num : num, // 이 슬라임의 숫자
       isGameEnd : false,
-    }
+      matchWeight : 100 // 경기에 참가자로 당첨될 확률
+   }
     this.move = { // 이동에 관한 정보
-      speed : 4, // 이 슬라임의 점프당 이동 속도
-      jumpSpeed : 0.4, // 이 슬라임의 점프 간격
-      location : 0, // 이 슬라임의 현 위치
-      nextLodgment : 150, // 이 슬라임의 다음 거점의 원점으로부터의 위치
-      diceWeight : [...Array(6)].fill(100), // 이 슬라임의 주사위 가중치
+      speed : 4, // 이 캐릭터의의 점프당 이동 속도
+      jumpSpeed : 0.4, // 이 캐릭터의 점프 간격
+      location : 0, // 이 캐릭터의 현 위치
+      nextLodgment : 150, // 이 캐릭터의 다음 거점까지의 위치
+      diceWeight : [...Array(6)].fill(100), // 이 캐릭터의 주사위 가중치
       diceAmountSum : 600, // 이 가중치들의 합
       delta : [...Array(6)].map((val, index) => ++index * -0.03) // 해당 주사위가 나왔을 때 점프 속도가 증가할 양
     }
@@ -29,9 +30,9 @@ class Slime {
   
   jump() {
     this.move.location += this.move.speed
-    // if(this.move.jumpSpeed < 0.4) {
-    //   this.move.jumpSpeed += (0.4 - this.move.jumpSpeed) * 0.1
-    // }
+    if(this.move.jumpSpeed < 0.4) {
+      this.move.jumpSpeed += (0.4 - this.move.jumpSpeed) * 0.1
+    }
     if(this.count > 0) {
       this.count --
     } else {

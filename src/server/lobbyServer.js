@@ -2,7 +2,7 @@
 const User = require('../model/user.js')
 
 // function
-const standardMatchManager = require('./lobbyServer/standard/standardMatchManager.js')
+const standardMatchManager = require('./lobbyServer/standardMatchManager.js')
 const chatManager = require('./lobbyServer/chatManager.js')
 
 module.exports = io => {

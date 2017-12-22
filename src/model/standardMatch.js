@@ -5,9 +5,6 @@
 require('date-utils')
 const mongoose = require('mongoose')
 
-// class
-const Slime = require('../server/gameServer/ingame/slime.js')
-
 // model
 const Error = require('./error.js')
 
@@ -55,20 +52,6 @@ new Promise((resolve, reject) => {
   })
   return resolve(newMatch)
 })
-
-// 시작 하기 전에 대기 시간이다.
-schema.methods.waitForStart() = function() {
-  this.waitTime = 20
-  setInterval() 
-}
-
-schema.methods.gameStart() = function() {
-  
-}
-
-schema.methods.createSlime() = function() {
-  this.slimeArray = [...Array(8)].map((slime, index) => new Slime(io, '1000', index))
-}
 
 
 

@@ -12,7 +12,7 @@ const schema = new mongoose.Schema({
     name : String, // 유저의 이름
     money : Number, // 유저가 가진 돈
     isBanned : Boolean, // 유저가 밴이 됬는지
-    lastEnter : Date,
+    lastEnter : Date, // 유저가 마지막으로 접속한 날짜
     status : String, // 유저의 상태
     room : String, // 유저가 방에 있다면 방의 이름
     friend : Array // 유저의 친구 목록.

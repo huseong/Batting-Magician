@@ -4,19 +4,19 @@
 */
 
 // model
-const User = require('../../../model/user.js')
-const Error = require('../../../model/error.js')
-const StandardMatch = require('../../../model/standardMatch.js')
+const User = require('../../model/user.js')
+const Error = require('../../model/error.js')
+const StandardMatch = require('../../model/standardMatch.js')
 
-// function 
-const createStandardMatch = require('./createStandardMatch.js')
+// // function 
+// const createStandardMatch = require('./createStandardMatch.js')
 
 // const property
 const matchingPool = []
 const waitingPool = []
 const maxStandardMatch = 50 // 표준 경기의 최대량
 const minStandardMatch = 30 // 표준 경기의 최소량
-var lastRoomID = require('../../../model/server.js')
+var lastRoomID = require('../../model/server.js')
 
 module.exports = socket => 
   new Promise((resolve, reject) => {

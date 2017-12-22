@@ -13,7 +13,6 @@ class StandardMatch {
     .then(startGame) 
   }
 
-  
   startGame () {
     this.createSlime()
   }
