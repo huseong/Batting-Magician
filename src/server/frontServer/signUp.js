@@ -10,7 +10,8 @@ module.exports = (socket, id) =>
       if(!signUpRegex.test(name))
         return socket.emit('name error')
       socket.removeAllListeners('sign up')
-      let user = User.create(id, name).catch(() => reject(socket))
-      resolve(socket, user)
+      User.create(id, name).then(user => {
+        resolve({socket : socket, user : user})
+      }).catch(() => reject(socket))
     })
   })

@@ -1,4 +1,4 @@
-const mongoose  = require('mongoose')
+const mongoose = require('mongoose')
 require('date-utils')
 
 const schema = new mongoose.Schema({
@@ -10,13 +10,16 @@ const schema = new mongoose.Schema({
 
 schema.statics.create = (hackName, userName, id) => {
   const date = new Date()
-  let hack = new hack({
+  let newHack = new hack({
     hackName : hackName,
     userName : userName,
     id : id,
     date : date.toFormat('YYYY-MM-DD HH24:MI:SS')
   })
-  hack.save(err => { console.log('DB Error : ', err) })
+  newHack.save(err => {
+    if(err)
+      console.log('DB Error : ', err)
+    })
 }
 
 const hack = mongoose.model('hack', schema)

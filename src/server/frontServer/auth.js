@@ -13,16 +13,22 @@ module.exports = socket =>
   new Promise((resolve, reject) => {
     // TODO: user의 상태를 확인한다.
     const userCheck = id => 
-      User.findOne({ info : { id : id }}, (err, user) => {
+      User.findOne({ 'info.id' : id }, (err, user) => {
         if(err) { // 에러가 발생하면 User DB 에 저장함.
           Error.create('User DB Error')
           return reject(socket)
         }
         if(!user)  // 만약 유저를 찾을 수 없다면 -> 아직 가입 안한 유저라면
           return signUp(socket, id).then(toLobbyServer).catch(reject)
+        if(user.info.status !== 'Enter')
+          console.log('애 왜 Enter 아님?')
         user.lastEnter = Date.now()
-        user.save(err => { Error.create('User DB Error');  return reject(socket); })
-        toLobbyServer(socket, user).catch(reject)
+        user.save(err => {
+          if(err) {
+            Error.create('User DB Error');
+            return reject(socket);
+          }})
+        toLobbyServer({socket : socket, user : user}).catch(reject)
       })
     if(!socket.isVersionChecked) {
       Hack.create('Version Check Skip')
@@ -33,9 +39,17 @@ module.exports = socket =>
   })
 
 // TODO: 유저를 로비서버로 보낸다.
-const toLobbyServer = (socket, user) => 
+const toLobbyServer = param => 
   new Promise((resolve, reject) => {
+    const socket = param.socket
+    const user = param.user
     user.info.status = 'Lobby'
+    user.save(err => {
+      if(err) {
+        Error.create('User DB Error')
+        return reject(socket)
+      }
+    })
     socket.emit('to lobby server')
     return reject(socket)
   })

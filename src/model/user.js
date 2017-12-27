@@ -63,7 +63,7 @@ schema.statics.create = (id, name) =>
       if(err)
         Error.create('User DB Error in Save User : ', err)
     })
-    return newUser
+    resolve(newUser)
   })
 
 // TODO: 유저가 해당 상태인지를 확인한다.
@@ -76,13 +76,13 @@ schema.statics.checkStatus = (socket, status) =>
         Hack.create('ID Not Found')
         return reject(socket)
       }
-      user.findOne({info : { id : id}}, (err, user) => {
+      user.findOne({'info.id' : id}, (err, user) => {
         if(!user) { // 이거 못찾으면 크랙유저
           Hack.create('User Not Found', null, id)
           return reject(socket)
         }
         if(user.info.status === status) {
-          resolve(socket, user)
+          resolve(user)
         } else {
           Hack.create('Location Hack', user, id)
           reject(socket)
