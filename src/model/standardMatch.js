@@ -55,6 +55,6 @@ new Promise((resolve, reject) => {
 
 
 
-const match = mongoose.model('room', schema)
+const standardMatch = mongoose.model('standard match', schema)
 
-module.exports = match
+module.exports = standardMatch

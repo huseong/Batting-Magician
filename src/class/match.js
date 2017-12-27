@@ -1,8 +1,12 @@
 // util
 const setTimer = require('../util/setTimer.js')
 
-class StandardMatch {
-  constructor() {
+class Match {
+  constructor(io) {
+    this.meta = {
+      io : io,
+      
+    }
     this.match = match // match Mongoose Module
   }
 

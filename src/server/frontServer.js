@@ -7,7 +7,7 @@ module.exports = io => {
     console.log('server connected. id : ', socket.id)
     checkVersion(socket)
     .then(auth)
-    .catch(socket => socket.disconnect(true))
+    .catch(socket => console.log(socket.disconnect))
     socket.on('disconnect', () =>
       console.log('User Disconnected : ', socket.id)
     )

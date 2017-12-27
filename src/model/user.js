@@ -15,12 +15,18 @@ const schema = new mongoose.Schema({
     lastEnter : Date, // 유저가 마지막으로 접속한 날짜
     status : String, // 유저의 상태
     room : String, // 유저가 방에 있다면 방의 이름
+    matchType : String, // 참가한 방의 매치 종류
     friend : Array // 유저의 친구 목록.
   },
   bank : {
     isSaving : Boolean, // 저축중인지
     savingDate : Date, // 저축 시작한지 얼마나 됬는지
     amount : Number // 저축한 양
+  },
+  game : {
+    isGameplay : Boolean,
+    haveCharacter : Array, // 유저가 해당 캐릭터를 가졌는지
+    character : String // 유저가 현재 쓰는 캐릭터
   }
 })
 
@@ -43,10 +49,19 @@ schema.statics.create = (id, name) =>
           room : '',
           status : 'Lobby',
           lastEnter : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS')
+      },
+      bank : {
+        isSaving : false,
+        amount : 0
+      },
+      game : {
+        isGameplay : false,
+        haveCharacter : [...Array(10)].fill(false),
       }
     })
     newUser.save(err => {
-        Error.create('User DB Error')
+      if(err)
+        Error.create('User DB Error in Save User : ', err)
     })
     return newUser
   })
