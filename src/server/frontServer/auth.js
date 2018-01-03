@@ -13,7 +13,7 @@ module.exports = socket =>
   new Promise((resolve, reject) => {
     // TODO: user의 상태를 확인한다.
     const userCheck = id => 
-      User.findOne({ 'info.id' : id }, (err, user) => {
+      User.findOne({ 'meta.id' : id }, (err, user) => {
         if(err) { // 에러가 발생하면 User DB 에 저장함.
           Error.create('User DB Error')
           return reject(socket)
@@ -50,6 +50,7 @@ const toLobbyServer = param =>
         return reject(socket)
       }
     })
+    console.log('로비 서버로 이동하시오')
     socket.emit('to lobby server')
-    return reject(socket)
+    setTimeout(() => reject(socket), 1000) // 1초 뒤에 연결을 종료함
   })

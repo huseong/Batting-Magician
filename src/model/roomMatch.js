@@ -8,6 +8,8 @@ const mongoose = require('mongoose')
 // model
 const Error = require('./error.js')
 
+const roomID = new Array(1000)
+
 const schema = new mongoose.Schema({
   meta : {
     id : Number, // 해당 방에 대한 고유 식별자이다.

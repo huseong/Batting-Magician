@@ -1,3 +1,5 @@
+import { setTimeout } from 'timers';
+
 // module
 const mongoose = require('mongoose')
 require('date-utils')
@@ -7,21 +9,22 @@ const Hack = require('./hack.js')
 const Error = require('./error.js')
 
 const schema = new mongoose.Schema({
-  info : {
+  meta : {
     id : String, // 유저의 식별자. Google ID이다.
     name : String, // 유저의 이름
-    money : Number, // 유저가 가진 돈
     isBanned : Boolean, // 유저가 밴이 됬는지
-    lastEnter : Date, // 유저가 마지막으로 접속한 날짜
+    lastEnter : Date // 유저가 마지막으로 접속한 날짜
+  },
+  info : {
+    level : Number, // 유저 레벨
+    ticket : Number, // 유저가 가진 티켓의 수
+    expAmount : Number, // 유저의 경험치 량
+    achieve : Number, // 유저가 성취한 업적
+    money : Number, // 유저가 가진 돈
     status : String, // 유저의 상태
     room : String, // 유저가 방에 있다면 방의 이름
     matchType : String, // 참가한 방의 매치 종류
     friend : Array // 유저의 친구 목록.
-  },
-  bank : {
-    isSaving : Boolean, // 저축중인지
-    savingDate : Date, // 저축 시작한지 얼마나 됬는지
-    amount : Number // 저축한 양
   },
   game : {
     isGameplay : Boolean,
@@ -41,18 +44,19 @@ schema.statics.create = (id, name) =>
       }
     })
     const newUser = new user({
-      info : {
-          id : id,
-          name : name,
-          money : 0,
-          isBanned : false,
-          room : '',
-          status : 'Lobby',
-          lastEnter : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS')
+      meta : {
+        id : id,
+        name : name,
+        isBanned : false,
+        lastEnter : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS')
       },
-      bank : {
-        isSaving : false,
-        amount : 0
+      info : {
+        level : 1,
+        ticket : 6,
+        achieve : 0,
+        money : 1000,
+        room : '',
+        status : 'Lobby',
       },
       game : {
         isGameplay : false,
@@ -71,12 +75,14 @@ schema.statics.create = (id, name) =>
 schema.statics.checkStatus = (socket, status) =>
   new Promise((resolve, reject) => {
     socket.emit('get google')
+    socket.isChecked = false
+    
     socket.on('get google', ({id}) => {
       if(!id) {
         Hack.create('ID Not Found')
-        return reject(socket)
+        return reject('can not find id')
       }
-      user.findOne({'info.id' : id}, (err, user) => {
+      user.findOne({'meta.id' : id}, (err, user) => {
         if(!user) { // 이거 못찾으면 크랙유저
           Hack.create('User Not Found', null, id)
           return reject(socket)
@@ -91,5 +97,14 @@ schema.statics.checkStatus = (socket, status) =>
     })
   })
 
-const user = mongoose.model('user', schema)
+schema.methods.sendData = function() {
+  let param = {
+    name : this.meta.name,
+    money : this.info.money,
+    achieve : this.info.achieve
+  }
+  return param
+}
+
+  const user = mongoose.model('user', schema)
 module.exports = user

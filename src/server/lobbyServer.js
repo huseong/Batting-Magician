@@ -1,3 +1,5 @@
+import { disconnect } from 'cluster';
+
 // model
 const User = require('../model/user.js')
 const Error = require('../model/error.js')
@@ -5,25 +7,28 @@ const Error = require('../model/error.js')
 // function
 const standardMatchManager = require('./lobbyServer/standardMatchManager.js')
 const chatManager = require('./lobbyServer/chatManager.js')
+const roomManager = require('./lobbyServer/room/roomGameManager.js')
+const disconnectUser = require('./lobbyServer/disconnectUser.js')
 
-module.exports = io => {
+module.exports = (io, server) => {
   console.log('Lobby Server On!')
   io.on('connect', socket => {
     console.log('user connected in Lobby Server : ', socket.id)
-    User.checkStatus(socket, 'Lobby')
-    .then(user => {
-      console.log('안뇽 얘도라')
-      socket.user = user // socket에 user를 할당한다.
-      console.log(socket.user)
-      standardMatchManager(socket) // 50명을 정원으로 하는 표준 경기
-      chatManager(socket, io) // 채팅
+    const setUser = user => 
+      new Promise((resolve, reject) => {
+        socket.user = user
+        socket.server = server
+        socket.emit('user data', user.sendData())
+        roomManager(socket).catch(reject)
+        standardMatchManager(socket).catch(reject)
+        chatManager(socket, io).catch(reject)
+      })
+    User.checkStatus(socket, 'Lobby') // 유저가 로비에 있어도 되는 유저인지 확인한다.
+    .then(setUser)
+    .catch(reason => {
+      socket.emit('server disconnect', reason)
+      socket.disconnect(true)
     })
-    socket.on('disconnect client', () => {
-      if(socket.user) {
-        console.log('유저의 상태가 Enter로 전환됨')
-        socket.user.info.status = 'Enter'
-        socket.user.save()
-        console.log('user Disconnected in Lobby Server : ', socket.id)
-      }
-    })
+
+    socket.on('disconnect client', () => disconnectUser(socket))
   })}
