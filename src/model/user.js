@@ -16,13 +16,16 @@ const schema = new mongoose.Schema({
     lastEnter : Date // 유저가 마지막으로 접속한 날짜
   },
   info : {
+    room : {
+      roomID : Number, // 유저가 방에 있다면 방의 이름
+      bannedRoomID : [Number] // 유저가 밴된 방의 ID 배열
+    },
     level : Number, // 유저 레벨
     ticket : Number, // 유저가 가진 티켓의 수
     expAmount : Number, // 유저의 경험치 량
     achieve : Number, // 유저가 성취한 업적
     money : Number, // 유저가 가진 돈
     status : String, // 유저의 상태
-    room : String, // 유저가 방에 있다면 방의 이름
     matchType : String, // 참가한 방의 매치 종류
     friend : Array // 유저의 친구 목록.
   },
@@ -55,7 +58,7 @@ schema.statics.create = (id, name) =>
         ticket : 6,
         achieve : 0,
         money : 1000,
-        room : '',
+        roomID : '',
         status : 'Lobby',
       },
       game : {
@@ -76,7 +79,6 @@ schema.statics.checkStatus = (socket, status) =>
   new Promise((resolve, reject) => {
     socket.emit('get google')
     socket.isChecked = false
-    
     socket.on('get google', ({id}) => {
       if(!id) {
         Hack.create('ID Not Found')

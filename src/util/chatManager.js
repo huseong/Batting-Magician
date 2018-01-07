@@ -1,4 +1,4 @@
-module.exports = (socket, io) => {
+exports.manager = (socket, io) => {
   socket.chatAllow = true
   socket.chatAllowCount = 10
   setInterval(() => {
@@ -7,6 +7,8 @@ module.exports = (socket, io) => {
     }
    }, 2000)
   socket.on('chat', ({ text }) => {
+    if(!socket.roomID)
+      return
     if(socket.chatAllowCount < 0) {
       socket.chatAllow = false
       setTimeout(() => socket.chatAllow = true, 20606) // 20.606 초 만큼 채팅을 막는다.
@@ -25,3 +27,12 @@ module.exports = (socket, io) => {
     io.to(userMeta.room).emit('chat', chat)
   })
 }
+
+exports.managerChat = (message, roomID) => {
+  let chat = {
+    name : 'manager',
+    text : message
+  }
+  io.to(roomID).emit('chat', chat)
+}
+
