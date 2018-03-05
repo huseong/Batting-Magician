@@ -1,37 +1,40 @@
 // function
 const managerChat = require('../util/chatManager.js').managerChat
+const disconnectSocket = require('../util/disconnectSocket.js')
 
 // manager
 const chatManager = require('../util/chatManager.js').manager
 
-// member
-const roomMatches = []
+// class
+const RoomMatch = require('../class/roomMatch/main.js')
 
-// TODO: roomMatch 배열에 Match를 할당한다.
-exports.assignNewMatch = (match, userID) => 
-  new Promise(resolve => {
-    const roomMatch = new RoomMatch(match) // 매치 정보를 바탕으로 게임 서버에 match 정보를 넣는다.
-    roomMatch.users.id.push(userID) // 유저 아이디를 밀어넣는다.
-    roomMatches[match.meta.id] = roomMatch
-    resolve()
-  })
+// model
+const User = require('../model/user.js')
 
-module.exports = (io, server) => {
-  console.log('Room Server In ' + server + ' On!')
-  io.on('connect', socket => {
-    User.checkUser(socket, 'Room')
+class server {
+  constructor(io, serverName) {
+    this.roomMatches = []
+    console.log('Room Server Name ' + serverName + ' On!')
+    io.on('connect', this.userConnect)
+  }
+
+  userConnect(socket) {
+    User.checkUser(socket, 'Room') // 유저가 방에 있어도 되는 유저인지 확인한다.
     .then(user => {
-      if(!user.info.room.roomID)
+      if(!user.info.room.roomID || !roomMatch[user.info.room.roomID])
         return reject('can not find room')
-      const room = roomMatches[user.info.room.roomID]
-      room.users.socket.push(socket)
-      socket.emit('room info', room.makeRoomInfo())
-      socket.roomID = user.info.room.roomID
-      managerChat('user enter', socket.roomID)
-      chatManager(socket, io)
+      roomMatches[user.info.room.roomID].connect(socket, user) // 유저를 방에 연결한다.
     })
     .catch(disconnectSocket)
+  }
 
-    socket.on('chat')
-  })
+  assignNewMatch (match) {
+    new Promise(resolve => {
+      const roomMatch = new RoomMatch(match) // 매치 모델을 바탕으로 룸 서버에 매치 객체를 할당해 넣는다.
+      roomMatches[match.meta.id] = roomMatch
+      resolve()
+    })
+  }
 }
+
+module.exports = server

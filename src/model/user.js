@@ -1,5 +1,3 @@
-import { setTimeout } from 'timers';
-
 // module
 const mongoose = require('mongoose')
 require('date-utils')
@@ -9,25 +7,33 @@ const Hack = require('./hack.js')
 const Error = require('./error.js')
 
 const schema = new mongoose.Schema({
-  meta : {
+  meta : { // 유저에 대한 메타 정보
     id : String, // 유저의 식별자. Google ID이다.
     name : String, // 유저의 이름
     isBanned : Boolean, // 유저가 밴이 됬는지
-    lastEnter : Date // 유저가 마지막으로 접속한 날짜
+    lastEnter : Date, // 유저가 마지막으로 접속한 날짜
+    profile : Number // 유저가 가진 프로필
   },
   info : {
     room : {
       roomID : Number, // 유저가 방에 있다면 방의 이름
       bannedRoomID : [Number] // 유저가 밴된 방의 ID 배열
     },
-    level : Number, // 유저 레벨
+    exp : {
+      level : Number, // 유저 레벨
+      forNextLevel : Number, // 다음 레벨업을 위해 필요한 경험치
+      expAmount : Number // 유저의 현재 보유한
+    },
+    users : { // 다른 유저들과의 정보를 저장하는 것 이다.
+      friend : Array, // 유저의 친구 목록. 해당 유저의 meta.id가 들어간다.
+      block : Array // 차단한 유저의 목록. 해당 유저의 meta.name이 들어간다.
+    },
     ticket : Number, // 유저가 가진 티켓의 수
-    expAmount : Number, // 유저의 경험치 량
     achieve : Number, // 유저가 성취한 업적
     money : Number, // 유저가 가진 돈
     status : String, // 유저의 상태
     matchType : String, // 참가한 방의 매치 종류
-    friend : Array // 유저의 친구 목록.
+
   },
   game : {
     isGameplay : Boolean,

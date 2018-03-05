@@ -3,7 +3,7 @@ const User = require('../model/user.js')
 
 // class
 const Slime = require('../class/slime.js')
-const RoomMatch = require('../class/roomMatch.js')
+const RoomMatch = require('../class/roomMatch/main.js')
 
 // function
 const disconnectSocket = require('../util/disconnectSocket.js')

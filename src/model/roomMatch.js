@@ -25,13 +25,20 @@ const schema = new mongoose.Schema({
     id : Number, // 해당 방에 대한 고유 식별자이다.
     server : String, // 이 방이 속한 서버의 이름
     date : Date,
-    name : String,
   },
   info : {
-    users : [String],
-    status : String,
+    name : String,
+    userPersonnel : Number,
+    runnerPersonnel : Number,
+    isSecret : Boolean,
+    isBetting : Boolean,
+    isMagic : Boolean,
   }
 })
+
+// schema.statics.create = async function(server, param) {
+
+// }
 
 schema.statics.create = (server, param) =>
   new Promise((resolve, reject) => {
@@ -50,8 +57,4 @@ schema.statics.create = (server, param) =>
   return resolve(newMatch)
 })
 
-
-
-const standardMatch = mongoose.model('standard match', schema)
-
-module.exports = standardMatch
+module.exports = mongoose.model('room match', schema)

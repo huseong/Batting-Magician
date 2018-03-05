@@ -1,4 +1,4 @@
-exports.manager = (socket, io) => {
+exports.manager = (socket, match) => {
   socket.chatAllow = true
   socket.chatAllowCount = 10
   setInterval(() => {
@@ -14,6 +14,8 @@ exports.manager = (socket, io) => {
       setTimeout(() => socket.chatAllow = true, 20606) // 20.606 초 만큼 채팅을 막는다.
       return socket.emit('chat reject start')
     }
+    if(text.length > 120) 
+      return
     if(!socket.chatAllow)
       return socket.emit('chat reject')
     if(socket.chatAllowCount <= 5) { // 만약 5회 아래로 남았다면
