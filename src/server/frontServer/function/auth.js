@@ -19,6 +19,7 @@ module.exports = socket =>
           Error.create('User DB Error')
           return reject(socket)
         }
+        console.log(id)
         if(!user)  // 만약 유저를 찾을 수 없다면 -> 아직 가입 안한 유저라면
           return signUp(socket, id).then(toLobbyServer).catch(reject)
         if(user.info.status !== 'Enter')
