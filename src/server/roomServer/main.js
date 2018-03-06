@@ -1,15 +1,16 @@
+const utilUrl = '../../util/'
 // function
-const managerChat = require('../util/chatManager.js').managerChat
-const disconnectSocket = require('../util/disconnectSocket.js')
+const managerChat = require(utilUrl + 'chatManager.js').managerChat
+const disconnectSocket = require(utilUrl + 'disconnectSocket.js')
 
 // manager
-const chatManager = require('../util/chatManager.js').manager
+const chatManager = require(utilUrl + 'chatManager.js').manager
 
 // class
-const RoomMatch = require('../class/roomMatch/main.js')
+const RoomMatch = require('../../class/roomMatch/main.js')
 
 // model
-const User = require('../model/user.js')
+const User = require('../../model/user.js')
 
 class server {
   constructor(io, serverName) {

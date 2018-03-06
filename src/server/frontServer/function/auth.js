@@ -4,11 +4,12 @@
 */
 
 // model
-const User = require('../../model/user.js')
-const Hack = require('../../model/hack.js')
-const Error = require('../../model/error.js')
+const modelUrl = '../../../model/'
+const User = require(modelUrl + 'user.js')
+const Hack = require(modelUrl + 'hack.js')
+const Error = require(modelUrl + 'error.js')
 const signUp = require('./signUp.js')
-const getGoogleID = require('../../util/getGoogleID.js')
+const getGoogleID = require('../../../util/getGoogleID.js')
 module.exports = socket => 
   new Promise((resolve, reject) => {
     // TODO: user의 상태를 확인한다.
@@ -50,7 +51,6 @@ const toLobbyServer = param =>
         return reject(socket)
       }
     })
-    console.log('로비 서버로 이동하시오')
     socket.emit('to lobby server')
     setTimeout(() => reject(socket), 1000) // 1초 뒤에 연결을 종료함
   })

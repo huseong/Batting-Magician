@@ -1,7 +1,7 @@
 /* TODO:
 유저로부터 닉네임을 받아 가입을 한다.
 */
-const User = require('../../model/user.js')
+const User = require('../../../model/user.js')
 const signUpRegex = /^[가-힣0-9]{2,8}$|^[a-zA-Z0-9]{2,13}$/
 module.exports = (socket, id) => 
   new Promise((resolve, reject) => {

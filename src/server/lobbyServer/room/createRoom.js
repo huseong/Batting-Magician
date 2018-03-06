@@ -6,7 +6,7 @@ const Hack = require('../../../model/hack.js')
 const RoomMatch = require('../../../model/roomMatch.js')
 
 // server
-const RoomServer = require('../../roomServer.js')
+const RoomServer = require('../../roomServer/main.js')
 
 module.exports = (socket, param, roomServer) => 
   new Promise((resolve, reject) => {

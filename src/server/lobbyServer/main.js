@@ -1,14 +1,14 @@
 // model
-const User = require('../model/user.js')
-const Error = require('../model/error.js')
+const User = require('../../model/user.js')
+const Error = require('../../model/error.js')
 
 // manager
 // const standardMatchManager = require('./lobbyServer/standardMatchManager.js')
-const roomGameManager = require('./lobbyServer/room/roomGameManager.js') // 방에서 하는 게임을 관리하는 매니저이다.
+const roomGameManager = require('./room/roomGameManager.js') // 방에서 하는 게임을 관리하는 매니저이다.
 
 //function
-const disconnectUser = require('./lobbyServer/disconnectUser.js')
-const disconnectSocket = require('../util/disconnectSocket.js')
+const disconnectUser = require('./disconnectUser.js')
+const disconnectSocket = require('../../util/disconnectSocket.js')
 
 class server {
   constructor(io, serverName, roomServer) {
@@ -19,7 +19,6 @@ class server {
         new Promise((resolve, reject) => {
           socket.user = user
           socket.emit('user data', user.sendData())
-          console.log('유저에 데이터 전송')
           roomGameManager(socket, roomServer).catch(reject)
           standardMatchManager(socket).catch(reject)
         })
