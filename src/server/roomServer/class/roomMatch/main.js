@@ -25,6 +25,8 @@ class RoomMatch {
     sendRoomInfo(connectedUser) // 연결된 유저에게 방의 정보를 보내준다.
   }
 
+
+  // 방의 정보를 보내는 함수
   sendRoomInfo(user) {
     let param = {
       info : this.info,

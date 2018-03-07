@@ -22,8 +22,6 @@ module.exports = socket =>
         console.log(id)
         if(!user)  // 만약 유저를 찾을 수 없다면 -> 아직 가입 안한 유저라면
           return signUp(socket, id).then(toLobbyServer).catch(reject)
-        if(user.info.status !== 'Enter')
-          console.log('애 왜 Enter 아님?')
         user.lastEnter = Date.now()
         user.save(err => {
           if(err) {

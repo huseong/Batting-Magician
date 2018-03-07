@@ -4,10 +4,10 @@ const Error = require('../../model/error.js')
 
 // manager
 // const standardMatchManager = require('./lobbyServer/standardMatchManager.js')
-const roomGameManager = require('./room/roomGameManager.js') // 방에서 하는 게임을 관리하는 매니저이다.
+const roomGameManager = require('./function/roomGameManager.js') // 방에서 하는 게임을 관리하는 매니저이다.
 
 //function
-const disconnectUser = require('./disconnectUser.js')
+const disconnectUser = require('./function/disconnectUser.js')
 const disconnectSocket = require('../../util/disconnectSocket.js')
 
 class server {
