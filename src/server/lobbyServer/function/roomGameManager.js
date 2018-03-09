@@ -42,7 +42,7 @@ module.exports = (socket, roomServer) =>
             if(!err) // 에러가 없다면 유저를 room Scene으로 이동시킨다.
               socket.emit('to room scene') // room scene으로 이동하라고 보내준다
           })
-        })
+        }).catch(reject)
       }))
       .catch(reject)
     })
