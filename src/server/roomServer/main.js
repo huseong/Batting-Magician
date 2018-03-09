@@ -32,7 +32,7 @@ class server {
   assignNewMatch (match) {
     new Promise(resolve => {
       const roomMatch = new RoomMatch(match) // 매치 모델을 바탕으로 룸 서버에 매치 객체를 할당해 넣는다.
-      roomMatches[match.meta.id] = roomMatch
+      this.roomMatches[match.meta.id] = roomMatch
       resolve()
     })
   }
