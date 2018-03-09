@@ -20,7 +20,7 @@ class server {
           socket.user = user
           socket.emit('user data', user.sendData())
           roomGameManager(socket, roomServer).catch(reject)
-          standardMatchManager(socket).catch(reject)
+          // standardMatchManager(socket).catch(reject)
         })
       User.checkStatus(socket, 'Lobby') // 유저가 로비에 있어도 되는 유저인지 확인한다.
       .then(setUser)
