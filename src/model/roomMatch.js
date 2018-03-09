@@ -36,9 +36,7 @@ const schema = new mongoose.Schema({
   }
 })
 
-// schema.statics.create = async function(server, param) {
-
-// }
+const room = mongoose.model('room match', schema)
 
 schema.statics.create = (server, param) =>
   new Promise((resolve, reject) => {
@@ -57,4 +55,4 @@ schema.statics.create = (server, param) =>
   return resolve(newMatch)
 })
 
-module.exports = mongoose.model('room match', schema)
+module.exports = room
