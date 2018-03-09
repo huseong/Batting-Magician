@@ -15,6 +15,7 @@ schema.statics.create = (hackName, id) => {
     id : id,
     date : date.toFormat('YYYY-MM-DD HH24:MI:SS')
   })
+  console.log('Created Hack : ', hackName)
   newHack.save(err => {
     if(err)
       console.log('DB Error : ', err)

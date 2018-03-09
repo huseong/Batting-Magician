@@ -16,6 +16,7 @@ module.exports = (socket, roomServer) =>
         reject('can not find server')
       User.checkStatus(socket, 'Lobby') // 플레이어가 로비에 
       .then(user => new Promise(async function (resolve, reject) {
+        console.log(param)
         if(!(param.name.length < 13)) // 방의 이름의 제한에 맞지 않는 요청이 들어온 경우
           Hack.create('Name Over in Create Room')
           return reject('Client Hack')
