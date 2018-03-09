@@ -7,7 +7,7 @@ const disconnectSocket = require(utilUrl + 'disconnectSocket.js')
 const chatManager = require(utilUrl + 'chatManager.js').manager
 
 // class
-const RoomMatch = require('../../class/roomMatch/main.js')
+const RoomMatch = require('./class/roomMatch/main.js')
 
 // model
 const User = require('../../model/user.js')

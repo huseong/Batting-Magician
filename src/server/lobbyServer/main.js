@@ -26,6 +26,7 @@ class server {
       .then(setUser)
       .catch((reason) => disconnectSocket(socket, reason))
       socket.on('disconnect client', () => disconnectUser(socket))
+      socket.on('disconnect', () => console.log('user Disconnected : ' + socket.id))
     })
   }
 }

@@ -1,8 +1,8 @@
 const defaultChatAllowCount = 10 // 유저의 기본 채팅 허용 가능 수
 const allowCountRefillTerm = 2000 // 유저의 채팅 허용 가능 수 리필 간격
 const chatBlockTime = 30000 // 채팅을 차단하는 시간
-const User = require('../../../model/user.js')
-const Hack = require('../../../model/hack.js')
+const User = require('../../../../../model/user.js')
+const Hack = require('../../../../../model/hack.js')
 
 module.exports = user => { // roomMatch에서 생성된 user 오브젝트를 받아서
   user.chat = {
