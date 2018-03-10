@@ -18,6 +18,7 @@ class server {
       const setUser = user => // 유저에 대해 기본적인 것을 세팅해놓는다. 
         new Promise((resolve, reject) => {
           socket.user = user
+          socket.server = serverName
           socket.emit('user data', user.sendData())
           roomGameManager(socket, roomServer).catch(reject)
           // standardMatchManager(socket).catch(reject)

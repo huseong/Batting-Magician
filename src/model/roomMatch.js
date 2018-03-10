@@ -41,18 +41,20 @@ const room = mongoose.model('room match', schema)
 schema.statics.create = (server, param) =>
   new Promise((resolve, reject) => {
     let newMatch = new room({
-    meta : {
-      id : createRoomID(),
-      serverName : server,
-      date : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS'),
-    },
-    info : param
-  })
-  newMatch.save(err => {
-    Error.create('Match DB Error')
-    reject()
-  })
-  return resolve(newMatch)
+      meta : {
+        id : createRoomID(),
+        serverName : server,
+        date : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS'),
+      },
+      info : param})
+    newMatch.save(err => {
+      if(err) {
+        Error.create('Match DB Error')
+        reject()
+      }
+    })
+    console.log('방 생성이 정상적으로 완료됨. 만들어진 방 : ' + param)
+    return resolve(newMatch)
 })
 
 module.exports = room
