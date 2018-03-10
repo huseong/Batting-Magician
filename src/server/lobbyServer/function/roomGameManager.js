@@ -28,7 +28,7 @@ const checkHack = parameters =>
 
 // TODO: 방을 만든다.
 const createRoom = parameters =>
-  new Promise((resolve, reject) => {
+  new Promise(async function (resolve, reject) {
     socket = parameters.socket
     user = parameters.user
     roomServer = parameters.roomServer
