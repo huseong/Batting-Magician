@@ -93,13 +93,13 @@ schema.statics.checkStatus = (socket, status) =>
       user.findOne({'meta.id' : id}, (err, user) => {
         if(!user) { // 이거 못찾으면 크랙유저
           Hack.create('User Not Found', null, id)
-          return reject(socket)
+          return reject('Location Hack')
         }
         if(user.info.status === status) {
           resolve(user)
         } else {
           Hack.create('Location Hack', user, id)
-          reject(socket)
+          return reject('Location Hack')
         }
       })
     })

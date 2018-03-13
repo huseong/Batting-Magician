@@ -15,11 +15,12 @@ const User = require('../../model/user.js')
 class server {
   constructor(io, serverName) {
     this.roomMatches = []
-    console.log('Room Server Name ' + serverName + ' On!')
+    console.log('Room Server ' + serverName + ' On!')
     io.on('connect', this.userConnect)
   }
 
   userConnect(socket) {
+    console.log('User Connected in RoomServer ' + server)
     User.checkUser(socket, 'Room') // 유저가 방에 있어도 되는 유저인지 확인한다.
     .then(user => {
       if(!user.info.room.roomID || !roomMatch[user.info.room.roomID])

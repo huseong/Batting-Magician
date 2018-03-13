@@ -10,15 +10,16 @@ const Error = require('./error.js')
 
 const roomID = [... new Array(1000)].fill(false)
 
-const createRoomID = () => {
-  while(true) {
-    let id = Math.floor(Math.random() * 1000)
-    if(!roomID[id]) {
-      roomID[id] = true
-      return id
+const createRoomID = () => 
+  new Promise(resolve => {
+    while(true) {
+      let id = Math.floor(Math.random() * 1000)
+      if(!roomID[id]) {
+        roomID[id] = true
+        return resolve(id)
+      }
     }
-  }
-}
+  })
 
 const schema = new mongoose.Schema({
   meta : {
@@ -36,13 +37,12 @@ const schema = new mongoose.Schema({
   }
 })
 
-const room = mongoose.model('room match', schema)
-
-schema.statics.create = (server, param) =>
-  new Promise((resolve, reject) => {
+schema.statics.generateNewMatch = async function (server, param) {
+    console.log('방만들기 노리 ㅅ ㅣ작~')
+    const id = await createRoomID()
     let newMatch = new room({
       meta : {
-        id : createRoomID(),
+        id : id,
         serverName : server,
         date : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS'),
       },
@@ -50,11 +50,13 @@ schema.statics.create = (server, param) =>
     newMatch.save(err => {
       if(err) {
         Error.create('Match DB Error')
-        reject()
+        // reject()
       }
     })
     console.log('방 생성이 정상적으로 완료됨. 만들어진 방 : ' + param)
-    return resolve(newMatch)
-})
+    return newMatch
+}
+
+const room = mongoose.model('room match', schema)
 
 module.exports = room

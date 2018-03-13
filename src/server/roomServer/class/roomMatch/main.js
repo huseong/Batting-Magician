@@ -30,7 +30,7 @@ class RoomMatch {
   sendRoomInfo(user) {
     let param = {
       info : this.info,
-      user : {
+      users : {
         userCount : this.users.length,
         userList : this.users.map(value => value.meta),
       }
