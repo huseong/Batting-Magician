@@ -18,11 +18,15 @@ class RoomMatch {
         id : user.meta.id,
         name : user.meta.name,
         profile : user.meta.profile
+      },
+      info : {
+        isReady : false // 00000001
       }
     }
     manageChat(connectedUser)
     this.users.push(connectedUser)
     sendRoomInfo(connectedUser) // 연결된 유저에게 방의 정보를 보내준다.
+    connectedUser.socket.on('ready', () => readyForGame(connectedUser))
   }
 
 
@@ -36,6 +40,14 @@ class RoomMatch {
       }
     }
     user.socket.emit('room info', param)  
+  }
+  
+  readyForGame(user) {
+    user.info.isReady = true
+  }
+
+  startGame() {
+    
   }
 
   disconnect(socket) {

@@ -18,6 +18,34 @@ const maxStandardMatch = 50 // 표준 경기의 최대량
 const minStandardMatch = 30 // 표준 경기의 최소량
 var lastRoomID = require('../../model/server.js')
 
+class MatchManage {
+  constructor() {
+    this.waitingPool = [... new Array(12)].fill(new Array()) // 유저들이 대기하고 있는 풀이다.
+    this.matchCycle = 5 // 풀을 확인하는 주기이다.
+    this.matchMin = 12 // 각 풀마다 합리적인 매칭을 위해 최소한으로 있어야하는 유저들의 수이다.
+    setInterval(this.tryGeneratingMatch(), this.matchCycle)
+  }
+
+  connectSocket(socket) { // 유저의 요청과 
+    socket.on('add waiting pool', this.setUserToWaitingPool)
+  }
+
+  setUserToWaitingPool() {
+    User.checkStatus(socket, 'Lobby')
+    .then(user => {
+      const matchUser = {
+        socket : socket,
+        point : user.info.point
+      }
+      this.waitingPool[user.info.arena.tier].push(matchUser)
+    })
+  }
+
+  tryGeneratingMatch() {
+
+  }
+}
+
 module.exports = socket => 
   new Promise((resolve, reject) => {
     socket.on('add matching pool', () => {

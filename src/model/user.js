@@ -28,7 +28,10 @@ const schema = new mongoose.Schema({
       friend : Array, // 유저의 친구 목록. 해당 유저의 meta.id가 들어간다.
       block : Array // 차단한 유저의 목록. 해당 유저의 meta.name이 들어간다.
     },
-    ticket : Number, // 유저가 가진 티켓의 수
+    arena : {
+      point : Number,
+      tier : Number
+    },
     achieve : Number, // 유저가 성취한 업적
     money : Number, // 유저가 가진 돈
     status : String, // 유저의 상태
