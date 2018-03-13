@@ -7,7 +7,7 @@ const Error = require('./error.js')
 const schema = new mongoose.Schema({
     info : {
         serverName : String,
-        currentRoomID : Number
+        nextMatchID : Number
     }
 })
 
