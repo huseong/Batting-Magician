@@ -13,8 +13,11 @@ const schema = new mongoose.Schema({
     id : Number, // 해당 아레나에 대한 고유 식별자이다.
     server : String, // 이 아레나가 속한 서버의 이름
     date : Date,
+    tier : Number // 해당 아레나가 몇 티어에서 진행된 아레나인지
   },
   info : {
+    userList : Array, // 유저의 아이디들이 들어간다.
+    chatLog : String // 채팅 로그들이 들어간다.
   }
 })
 
