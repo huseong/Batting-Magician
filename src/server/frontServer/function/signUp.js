@@ -7,7 +7,7 @@ module.exports = (socket, id) =>
   new Promise((resolve, reject) => {
     socket.emit('create sign up form')
     socket.on('sign up', ({name}) => {
-      if(!signUpRegex.test(name))
+      if(!signUpRegex.test(name)) // 조건에 맞는 이름인지 확인해본다.
         return socket.emit('name error')
       socket.removeAllListeners('sign up')
       User.create(id, name).then(user => {

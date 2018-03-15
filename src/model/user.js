@@ -10,11 +10,16 @@ const schema = new mongoose.Schema({
   meta : { // 유저에 대한 메타 정보
     id : String, // 유저의 식별자. Google ID이다.
     name : String, // 유저의 이름
+    epithet : Number, // 형용어의 id
     isBanned : Boolean, // 유저가 밴이 됬는지
     lastEnter : Date, // 유저가 마지막으로 접속한 날짜
     profile : Number // 유저가 가진 프로필
   },
   info : {
+    wealth : {
+      money : Number,
+      Jam : Number
+    },
     room : {
       roomID : Number, // 유저가 방에 있다면 방의 이름
       bannedRoomID : [Number] // 유저가 밴된 방의 ID 배열
@@ -28,9 +33,9 @@ const schema = new mongoose.Schema({
       friend : Array, // 유저의 친구 목록. 해당 유저의 meta.id가 들어간다.
       block : Array // 차단한 유저의 목록. 해당 유저의 meta.name이 들어간다.
     },
-    arena : {
-      point : Number,
-      tier : Number
+    arena : { // 아레나에 관한 것
+      point : Number, // 현재 점수
+      tier : Number // 플레이어의 티어
     },
     achieve : Number, // 유저가 성취한 업적
     money : Number, // 유저가 가진 돈

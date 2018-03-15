@@ -1,5 +1,5 @@
 module.exports = (socket, reason) => {
   socket.emit('server disconnect', reason)
-  console.log('User Disconnected : ', reason)
+  console.log('User ' + socket.id + '. Disconnected Reason : ' +  reason)
   socket.disconnect(true)
 }

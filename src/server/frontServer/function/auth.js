@@ -30,9 +30,9 @@ module.exports = socket =>
           }})
         toLobbyServer({socket : socket, user : user}).catch(reject)
       })
-    if(!socket.isVersionChecked) {
+    if(!socket.isVersionChecked) { // socket에서 version Check를 수행했는지 확인한다.
       Hack.create('Version Check Skip')
-      return reject(socket)
+      return reject('Hack')
     }
     getGoogleID(socket)
     .then(userCheck)
@@ -43,7 +43,7 @@ const toLobbyServer = param =>
   new Promise((resolve, reject) => {
     const socket = param.socket
     const user = param.user
-    user.info.status = 'Lobby'
+    user.info.status = 'Lobby' // 유저의 상태를 로비로 바꿔놓는다.
     user.save(err => {
       if(err) {
         Error.create('User DB Error')

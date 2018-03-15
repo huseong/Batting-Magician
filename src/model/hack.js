@@ -8,11 +8,11 @@ const schema = new mongoose.Schema({
   id : String
 })
 
-schema.statics.create = (hackName, id) => {
+schema.statics.create = (name, userID) => {
   const date = new Date()
   let newHack = new hack({
-    hackName : hackName,
-    id : id,
+    hackName : name,
+    id : userID ? userID : "Not Auth",
     date : date.toFormat('YYYY-MM-DD HH24:MI:SS')
   })
   console.log('Created Hack : '+ hackName)
