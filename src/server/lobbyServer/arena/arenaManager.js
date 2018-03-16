@@ -60,7 +60,7 @@ class MatchManage {
       user.socket.emit('user not afp') // 유저가 탈주하지 않았다는 것 을 알려준다.
     })
     if(!isSomeOneAfk) {
-
+      
     }
   }
 
