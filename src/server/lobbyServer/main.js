@@ -15,19 +15,20 @@ class server {
     console.log('Lobby Server Name ' + serverName + ' On!')
     io.on('connect', socket => {
       console.log('user connected in Lobby Server : ', socket.id)
-      const setUser = user => // 유저에 대해 기본적인 것을 세팅해놓는다. 
-        new Promise((resolve, reject) => {
-          socket.user = user
-          socket.server = serverName
-          socket.emit('user data', user.sendData())
-          roomGameManager(socket, roomServer).catch(reject)
-          // standardMatchManager(socket).catch(reject)
-        })
       User.checkStatus(socket, 'Lobby') // 유저가 로비에 있어도 되는 유저인지 확인한다.
-      .then(setUser)
+      .then(user => this.resUserInfo(socket, user))
       .catch(reason => disconnectSocket(socket, reason))
       socket.on('disconnect client', () => disconnectUser(socket))
       socket.on('disconnect', () => console.log('user Disconnected : ' + socket.id))
+    })
+  }
+
+  resUserInfo(socket, user) {
+    new Promise(resolve => {
+      socket.user = user
+      socket.server = serverName
+      socket.emit('user data', user.sendData())
+      resolve()
     })
   }
 }

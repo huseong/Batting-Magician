@@ -46,16 +46,22 @@ class MatchManage {
       if(this.waitingPool[i].length < this.matchMin) {
         continue;
       }
-      this.gen                                                                                                                              erateMatch(this.waitingPool[i])
+      this.generateMatch(this.waitingPool[i])
     }
   }
 
   checkNotAfp(user, matchSet) {
     user.socket.removeAllListeners('check not afp')
-    user.isAfk = true
+    user.isAfk = false
+    const isSomeOneAfk = false
     matchSet.forEach(user => {
+      if(user.isAfk)
+        isSomeOneAfk = true
       user.socket.emit('user not afp') // 유저가 탈주하지 않았다는 것 을 알려준다.
     })
+    if(!isSomeOneAfk) {
+
+    }
   }
 
   cancelFindingMatch() {

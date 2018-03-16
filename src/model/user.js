@@ -16,9 +16,11 @@ const schema = new mongoose.Schema({
     profile : Number // 유저가 가진 프로필
   },
   info : {
-    wealth : {
+    wealth : { // 보유한 재산에 관련된 것
       money : Number,
-      Jam : Number
+      jam : Number,
+      character : [{id :  Number, level : Number}],
+      card : [{id : Number, level: Number}]
     },
     room : {
       roomID : Number, // 유저가 방에 있다면 방의 이름
@@ -38,12 +40,10 @@ const schema = new mongoose.Schema({
       tier : Number // 플레이어의 티어
     },
     achieve : Number, // 유저가 성취한 업적
-    money : Number, // 유저가 가진 돈
     status : String, // 유저의 상태
-    matchType : String, // 참가한 방의 매치 종류
-
   },
   game : {
+    id : Number,
     isGameplay : Boolean,
     haveCharacter : Array, // 유저가 해당 캐릭터를 가졌는지
     character : String // 유저가 현재 쓰는 캐릭터
@@ -64,10 +64,19 @@ schema.statics.create = (id, name) =>
       meta : {
         id : id,
         name : name,
+        epithet : 0,
         isBanned : false,
-        lastEnter : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS')
+        lastEnter : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS'),
+        profile : 0
       },
       info : {
+        wealth : {
+          money : 1000,
+          jam : 0,
+          character : [],
+          card : []
+        },
+
         level : 1,
         ticket : 6,
         achieve : 0,

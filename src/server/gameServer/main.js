@@ -15,14 +15,17 @@ class server {
     })
   }
 
+  initialize() {
+    this.arenaMatches = {}
+  }
+
+  assignNewMatch() {
+    
+  }
+
   checkUserGame (user, socket) {
-    socket.emit('req user game id') // 유저의 게임 id를 요청한다. 받은 값과 실제 아레나에서의 값을 비교해야한다.
-    socket.on('res user game id', ({ id : id }) => {
-      Arena.find({'meta.id' : id }, arena => {
-        if(!arena) {
-          
-        }
-      })
+    User.find('game.id', id => {
+
     })
   }
 }
