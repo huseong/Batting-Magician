@@ -30,6 +30,7 @@ const isVersionChecked = socket =>
     }
     resolve(socket)
   })
+
 // TODO: 유저의 상태를 확인한다. 
 const userCheck = (socket, id) => 
   new Promise((resolve, reject) => {
