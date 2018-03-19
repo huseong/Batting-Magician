@@ -76,7 +76,6 @@ schema.statics.create = (id, name) =>
           character : [],
           card : []
         },
-
         level : 1,
         ticket : 6,
         achieve : 0,
@@ -124,9 +123,15 @@ schema.statics.checkStatus = (socket, status) =>
 
 schema.methods.sendData = function() {
   let param = {
-    name : this.meta.name,
-    money : this.info.money,
-    achieve : this.info.achieve
+    meta : {
+      name : this.meta.name,
+      epithet : this.info.epithet,
+      profile : this.meta.profile
+    },
+    wealth : {
+      money : this.info.money,
+      jam : this.info.jam,
+    }
   }
   return param
 }

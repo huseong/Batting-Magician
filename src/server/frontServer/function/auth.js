@@ -17,7 +17,7 @@ module.exports = socket =>
     isVersionChecked(socket)
     .then(getGoogleID)
     .then(id => userCheck(socket, id))
-    .then(user => toLobbyServer(socket, user))
+    .then(resolve)
     .catch(reject)
   })
 
@@ -46,23 +46,8 @@ const userCheck = (socket, id) =>
       if(err) {
         Error.create('User DB Error');
         return reject('DB Error');
-      } else {
-        resolve(user)
-      }
+      } else
+        return resolve(user)
     })
   })
 })
-  
-// TODO: 유저를 로비서버로 보낸다.
-const toLobbyServer = (socket, user) => 
-  new Promise((resolve, reject) => {
-    user.info.status = 'Lobby' // 유저의 상태를 로비로 바꿔놓는다.
-    user.save(err => {
-      if(err) {
-        Error.create('User DB Error')
-        return reject(socket)
-      }
-      socket.emit('to lobby server')
-      setTimeout(() => reject('disconnect from front'), 1000) // 1초 뒤에 연결을 종료함
-    })
-  })
