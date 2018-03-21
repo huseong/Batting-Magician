@@ -16,32 +16,45 @@ class MatchManage {
   constructor(serverName) {
     this.waitingPool = [... new Array(12)].fill(new Array()) // 유저들이 대기하고 있는 풀이다.
     this.matchPool = []
+    this.userDic = {}
     this.matchCycle = 5 // 풀을 확인하는 주기이다.
     this.matchMin = 12 // 각 풀마다 합리적인 매칭을 위해 최소한으로 있어야하는 유저들의 수이다.
     Server.find({ 'info.serverName' : serverName }, server => {
       this.nextMatchID = server.info.nextMatchID
     })
-    setInterval(this.tryGeneratingMatch(), this.matchCycle)
+    setInterval(this.checkPoolCondition(), this.matchCycle) // 주기에 따라 매칭을 시작한다.
   }
 
-  connectSocket(socket) { // 유저의 요청과 
-    socket.on('add waiting pool', this.setUserToWaitingPool)
-    
-    socket.on('cancel find match', this.cancelFindingMatch)
+  connectSocket(socket) { // 유저의 요청을 받을 수 있는 리스너를 열어준다. 
+    socket.on('add waiting pool', () => this.setUserToWaitingPool(socket))
+    socket.on('cancel find match', () => this.cancelFindingMatch(socket))
   }
 
-  setUserToWaitingPool() {
+  setUserToWaitingPool(socket) {
     User.checkStatus(socket, 'Lobby')
     .then(user => {
       const matchUser = {
-        socket : socket,
-        point : user.info.point
+        socket : socket, 
+        point : user.info.arena.point,
+        tier : user.info.arena.tier,
+        availCancel : true // 유저가 취소를 누를 수 있는지
       }
+      this.userDic[socket] = matchUser
       this.waitingPool[user.info.arena.tier].push(matchUser)
     })
   }
 
-  tryGeneratingMatch() {
+  // TODO: 매치 찾는 걸 취소하면.
+  cancelFindingMatch(socket) {
+    const matchUser = this.userDic[socket] // socket으로 유저를 찾아온다.
+    if(!matchUser.availCancel)
+      return;
+    const targetPool = this.waitingPool[matchUser.tier]
+    const index = targetPool.indexOf(matchUser)
+    targetPool.splice(index, 1)
+  }
+  // TODO: 모든 풀들 중 매치를 만들 조건에 맞는 풀이 있는지 확인한다.
+  checkPoolCondition() {
     for(let i=0; i<this.waitingPool.length; i++) {
       if(this.waitingPool[i].length < this.matchMin) {
         continue;
@@ -49,7 +62,7 @@ class MatchManage {
       this.generateMatch(this.waitingPool[i])
     }
   }
-
+  
   checkNotAfp(user, matchSet) {
     user.socket.removeAllListeners('check not afp')
     user.isAfk = false
@@ -64,11 +77,21 @@ class MatchManage {
     }
   }
 
-  cancelFindingMatch() {
-     
+  checkMatchMakingRejected (matchSet) {
+    matchSet.forEach(user => {
+      if(user.isAfk) // 만약 유저가 나갔다면
+        return matchSet.forEach(user => this.noticeMatchMakingRejected(user))
+    })
   }
 
+  noticeMatchMakingRejected(user) {
+    user.socket.emit('match making rejected')
+    
+  }
+
+  // TODO: 풀 내에 있는 유저들로 매치를 만들어낸다.
   generateMatch(pool) {
+    pool.forEach(user => user.availCancel = false)
     pool.sort((a, b) => a.point - b.point) // 풀을 포인트 기준으로 정렬하고
     const isFront = true // 이게 true면 앞, false면 뒤에서부터 12명을 추출해낸다.
     while(pool.length < 12) { // pool의 크기가 12아래로 될때까지
@@ -89,7 +112,9 @@ class MatchManage {
         user.socket.on('check not afp', () => this.checkNotAfp(user, matchSet))
         user.socket.emit('check not afp') // 유저가 afp상태인지 아닌지 확인한다. 클라이언트에서는 확인 창을 띄워야한다.
       })
+      setTimeout(() => this.checkMatchMakingRejected(matchset), 10000);
     }
+    pool.forEach(user => user.availCancel = true)
   }
 }
 
