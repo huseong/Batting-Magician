@@ -10,10 +10,10 @@ const schema = new mongoose.Schema({
   meta : { // 유저에 대한 메타 정보
     id : String, // 유저의 식별자. Google ID이다.
     name : String, // 유저의 이름
-    epithet : Number, // 형용어의 id
+    epithet : String, // 형용어의 이름
     isBanned : Boolean, // 유저가 밴이 됬는지
     lastEnter : Date, // 유저가 마지막으로 접속한 날짜
-    profile : Number // 유저가 가진 프로필
+    profile : String, // 유저가 가진 프로필
   },
   info : {
     wealth : { // 보유한 재산에 관련된 것
@@ -26,17 +26,12 @@ const schema = new mongoose.Schema({
       roomID : Number, // 유저가 방에 있다면 방의 이름
       bannedRoomID : [Number] // 유저가 밴된 방의 ID 배열
     },
-    exp : {
-      level : Number, // 유저 레벨
-      forNextLevel : Number, // 다음 레벨업을 위해 필요한 경험치
-      expAmount : Number // 유저의 현재 보유한
-    },
     users : { // 다른 유저들과의 정보를 저장하는 것 이다.
       friend : Array, // 유저의 친구 목록. 해당 유저의 meta.id가 들어간다.
       block : Array // 차단한 유저의 목록. 해당 유저의 meta.name이 들어간다.
     },
     arena : { // 아레나에 관한 것
-      point : Number, // 현재 점수
+      flag : Number, // 현재 점수
       tier : Number // 플레이어의 티어
     },
     achieve : Number, // 유저가 성취한 업적
@@ -67,7 +62,7 @@ schema.statics.create = (id, name) =>
         epithet : 0,
         isBanned : false,
         lastEnter : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS'),
-        profile : 0
+        profile : 'Dog'
       },
       info : {
         wealth : {
@@ -76,16 +71,21 @@ schema.statics.create = (id, name) =>
           character : [],
           card : []
         },
-        level : 1,
-        ticket : 6,
-        achieve : 0,
-        money : 1000,
-        roomID : '',
-        status : 'Lobby',
+        users : {
+          friend : [],
+          block : []
+        },
+        arena : {
+          point : Number,
+          tire : Number
+        },
+        status : 'Lobby'
       },
       game : {
+        id : -1,
         isGameplay : false,
         haveCharacter : [...Array(10)].fill(false),
+        character : 'Dog'
       }
     })
     newUser.save(err => {
@@ -128,10 +128,8 @@ schema.methods.sendData = function() {
       epithet : this.info.epithet,
       profile : this.meta.profile
     },
-    wealth : {
-      money : this.info.money,
-      jam : this.info.jam,
-    }
+    wealth : this.info.wealth,
+    arena : this.info.arena
   }
   return param
 }
