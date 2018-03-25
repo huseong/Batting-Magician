@@ -27,8 +27,6 @@ class MatchManage {
     setInterval(this.checkPoolCondition, this.matchCycle) // 주기에 따라 매칭을 시작한다.
   }
 
-
-
   connectSocket(socket) { // 기본적으로 유저의 요청을 받을 수 있는 리스너를 열어준다. 
     socket.on('add waiting pool', () => setUserToWaitingPool(socket, this.userDic, this.waitingPool))
     socket.on('cancel find match', () => this.cancelFindingMatch(socket))
@@ -50,10 +48,5 @@ class MatchManage {
         return matchSet.forEach(user => this.noticeMatchMakingRejected(user))
     })
   }
-
-  noticeMatchMakingRejected(user) {
-    user.socket.emit('match making rejected')
-  }
-
 
 }

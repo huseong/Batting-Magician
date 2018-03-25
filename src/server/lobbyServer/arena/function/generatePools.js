@@ -6,7 +6,7 @@ module.exports = () => {
     const tierPool = {
       users : [],
       matchMakingFront : true, // 매치 메이킹을 앞부터 할지 뒤 부터 할지 결정하는 요소이다.
-      matchMakeFailCount : 0 // 매치 메이킹을 실패한 횟수
+      failCount : 0 // 매치 메이킹을 실패한 횟수
     }
     pools.push(tierPool)
   }

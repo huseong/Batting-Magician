@@ -6,19 +6,16 @@ const generateMatch = requie('./generateMatch.js')
 
 
 module.exports = (waitingPools, matchMin) => {
-  waitingPools.forEach(pool => {
-    if(pool.length < matchMin) {
-      waitingPool[i].poolFailCount++ // 실패한 횟수에 1을 더한다.
-      if(waitingPool[i].poolFailCount > 6) { // 만약 6번 이상 실패했다면
-
+  for(let index=0; index<waitingPools.length; index++) {
+    const pool = waitingPools[i]
+    if(pool.length < matchMin) { // 만약 12명 미만이면 못 만든다.
+      pool.failCount++ // 실패한 횟수에 1을 더한다.
+      if(pool.failCount > 8) { // 만약 8번 이상 실패했다면
+        if(index > 0) {
+          
+        }
       }
     }
-  });
-  for(let i=0; i<waitingPools.length; i++) {
-    if(waitingPool[i].length < matchMin) {
-
-
-    }
-    generateMatch(waitingPool[i])
+    generateMatch(pool)
   }
 }
