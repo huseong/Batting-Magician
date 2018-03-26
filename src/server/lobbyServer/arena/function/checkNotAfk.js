@@ -9,6 +9,6 @@ module.exports = (user, match) => {
     user.socket.emit('user not afk') //유저가 탈주하지 않았다는 것 을 알려준다.
   })
   if(isSomeOneAfk)
-    return
-  
+    return  
 }
+
