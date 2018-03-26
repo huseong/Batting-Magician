@@ -17,8 +17,7 @@ class MatchManage {
   constructor(serverName) {
     this.waitingPool = [] // 유저들이 대기하고 있는 풀이다.
     this.matchPool = []
-    this.userDic = {}
-    this.matchCycle = 15 // 15초마다 매칭 하기
+    this.matchCycle = 12 // 15초마다 매칭 하기
     this.matchMin = 12 // 각 풀마다 합리적인 매칭을 위해 최소한으로 있어야하는 유저들의 수이다.
     Server.find({ 'info.serverName' : serverName }, server => {
       this.nextMatchID = server.info.nextMatchID
@@ -27,28 +26,15 @@ class MatchManage {
   }
 
   connectSocket(socket) { // 기본적으로 유저의 요청을 받을 수 있는 리스너를 열어준다. 
-    socket.on('add waiting pool', () => setUserToWaitingPool(socket, this.userDic, this.waitingPool))
+    socket.on('add waiting pool', () => setUserToWaitingPool(socket, this.waitingPool))
     socket.on('cancel find match', () => this.cancelFindingMatch(socket))
   }
 
   // TODO: 매치 찾는 걸 취소하면.
   cancelFindingMatch(socket) {
-    const matchUser = this.userDic[socket] // socket으로 유저를 찾아온다.
-    if(!matchUser.availCancel)
-      return;
-    const targetPool = this.waitingPool[matchUser.tier]
-    const index = targetPool.indexOf(matchUser)
-    targetPool.splice(index, 1)
-  }
-
-  checkMatchMakingRejected (matchSet) {
-    matchSet.forEach(user => {
-      if(user.isAfk) // 만약 유저가 나갔다면
-        return matchSet.forEach(user => this.noticeMatchMakingRejected(user))
-    })
-  }
-
-  noticeMatchMakingRejected(user) {
-    user.socket.emit('match making rejected')
+    const userIndex = this.waitingPool.findIndex(user => user.socket === socket) // socket으로 유저를 찾아온다.
+    if(!this.waitingPool[userIndex].availCancel)
+      return
+    targetPool.splice(userIndex, 1)
   }
 }

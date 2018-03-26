@@ -12,7 +12,7 @@ const schema = new mongoose.Schema({
   meta : {
     id : Number, // 해당 아레나에 대한 고유 식별자이다.
     server : String, // 이 아레나가 속한 서버의 이름
-    date : Date,
+    date : Date, 
     tier : Number // 해당 아레나가 몇 티어에서 진행된 아레나인지
   },
   info : {
@@ -21,21 +21,24 @@ const schema = new mongoose.Schema({
   }
 })
 
-schema.statics.generateNewArena = async function (server, param) {
+schema.statics.generateNewArena = (server, tempMatch) => {
     let newMatch = new room({
       meta : {
         id : id,
         serverName : server,
         date : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS'),
       },
-      info : param})
+      info : {
+        
+      }
+    })
+    
     newMatch.save(err => {
       if(err) {
         Error.create('Match DB Error')
         // reject()
       }
     })
-    console.log('방 생성이 정상적으로 완료됨. 만들어진 방 : ' + param)
     return newMatch
 }
 

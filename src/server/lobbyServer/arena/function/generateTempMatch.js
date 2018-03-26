@@ -8,25 +8,28 @@ const checkNotAfk = require('./checkNotAfk.js')
 // value
 const maximumStandrardDeviation = 50 // 매치가 성사되기 위한 최대한의 표준편차
 
-module.exports = (waitingPool, matchMin) => {
+module.exports = (manager, matchMin) => {
+  const waitingPool = manager.waitingPool
   if(waitingPool.length < matchMin)
     return
+  waitingPool.forEach(user => user.availCancel = false)
   const rankOrderedArray = [... waitingPool].sort((a, b) => a.flag-b.flag) // 낮은 티어부터 오름차순
   const timeOrderedArray = [... waitingPool].sort((a, b) => a.startTime - b.startTime) // 오래 기다린 시간 순서부터 내림차순
   timeOrderedArray.forEach(timeOrderedUser => {
     if(rankOrderedArray.length < 12) // 만약 랭크 배열의 길이가 12이하면 빼버린다.
       break
-    const userIndex = pickUserGroups(rankOrderedArray, rankOrderedArray.findIndex(rankOrderedUser => rankOrderedUser === timeOrderedUser))
-    if(userIndex) {
-      const tempMatch = rankOrderedArray.splice(minIndex, 12) // rankOrderedArray에서 제거함
-      tempMatch.forEach(user => { // timeOrderedArray 에 만들어진 유저들을 제거한다.
-        timeOrderedArray.splice(rankOrderedArray.findIndex(user), 1) // timeOrderedAray
-        checkNotAfk(user, tempMatch)
+    const tempMatch = pickUserGroups(rankOrderedArray, rankOrderedArray.indexOf(timeOrderedUser))
+    if(tempMatch) {
+      tempMatch.forEach(user => { 
+        timeOrderedArray.splice(rankOrderedArray.indexOf(user), 1) // timeOrderedArray 에 만들어진 유저들을 제거한다.
+        checkNotAfk(user, tempMatch, manager) // user가 Afk상태인지 확인한다.
       })
     }
   })
+  waitingPool = rankOrderedArray
 }
 
+// TODO: 해당 유저를 포함하는 유저 그룹 중 가장 합리적인 그룹을 찾는다.
 const pickUserGroups = (array, userIndex) => {
   const startIndex = customMath.overZero(userIndex - 12)
   const endIndex = customMath.getMin(array.length-12, userIndex)
@@ -41,12 +44,5 @@ const pickUserGroups = (array, userIndex) => {
   }
   if(minValue > maximumStandrardDeviation) // 만약 최소 표준 편차 이상의 표준편차로 구성되었다면 이상한걸 리턴한다.
     return
-  return minIndex
-}
-
-const test = () => {
-  const array = [1,2,3,4,5,6,7,8,9,10,1]
-  array.forEach((element, index) => {
-    console.log(array.splice(index, 1))
-  })
+  return array.splice(minIndex, 12)
 }
