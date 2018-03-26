@@ -11,6 +11,7 @@ const Arena = require('../../../model/arena.js')
 
 // function 
 const setUserToWaitingPool = require('./function/setUserToWaitingPool.js')
+const generateTempMatch = require('./function/generateTempMatch.js')
 
 class MatchManage {
   constructor(serverName) {
@@ -22,7 +23,7 @@ class MatchManage {
     Server.find({ 'info.serverName' : serverName }, server => {
       this.nextMatchID = server.info.nextMatchID
     })
-    setInterval(this.checkPoolCondition, this.matchCycle) // 주기에 따라 매칭을 시작한다.
+    setInterval(generateTempMatch, this.matchCycle) // 주기에 따라 매칭을 시작한다.
   }
 
   connectSocket(socket) { // 기본적으로 유저의 요청을 받을 수 있는 리스너를 열어준다. 

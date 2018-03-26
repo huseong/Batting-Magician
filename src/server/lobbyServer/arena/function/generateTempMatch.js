@@ -1,25 +1,52 @@
+// TODO: 모든 풀들 중 매치를 만들 조건에 맞는 풀이 있는지 확인한다.
 
-const checkMatchMakingRejected = require('./checkMatchRejected.js')
+// function
+const generateMatch = requie('./generateMatch.js')
+const customMath = require('../../../../util/customMath.js')
+const checkNotAfk = require('./checkNotAfk.js')
 
-const reqNotAfk = user => {
-  user.isAfk = true // 유저가 탈주 상태인지 확인한다.
-  user.socket.on('res not afk', () => this.resNotAfk(user, matchSet))
-  user.socket.emit('check not afk') // 유저가 afk상태인지 아닌지 확인한다. 클라이언트에서는 afk인지 아닌지 확인할 수 있는 창을 띄워야한다.
+// value
+const maximumStandrardDeviation = 50 // 매치가 성사되기 위한 최대한의 표준편차
+
+module.exports = (waitingPool, matchMin) => {
+  if(waitingPool.length < matchMin)
+    return
+  const rankOrderedArray = [... waitingPool].sort((a, b) => a.flag-b.flag) // 낮은 티어부터 오름차순
+  const timeOrderedArray = [... waitingPool].sort((a, b) => a.startTime - b.startTime) // 오래 기다린 시간 순서부터 내림차순
+  timeOrderedArray.forEach(timeOrderedUser => {
+    if(rankOrderedArray.length < 12) // 만약 랭크 배열의 길이가 12이하면 빼버린다.
+      break
+    const userIndex = pickUserGroups(rankOrderedArray, rankOrderedArray.findIndex(rankOrderedUser => rankOrderedUser === timeOrderedUser))
+    if(userIndex) {
+      const tempMatch = rankOrderedArray.splice(minIndex, 12) // rankOrderedArray에서 제거함
+      tempMatch.forEach(user => { // timeOrderedArray 에 만들어진 유저들을 제거한다.
+        timeOrderedArray.splice(rankOrderedArray.findIndex(user), 1) // timeOrderedAray
+        checkNotAfk(user, tempMatch)
+      })
+    }
+  })
 }
 
-  // TODO: 풀 내에 있는 유저들로 매치를 만들어낸다.
-module.exports = pool => {
-    pool.forEach(user => user.availCancel = false) // pool 안에 있는 모든 유저들이 취소를 못하게 만든다.
-    pool.sort((a, b) => a.flag - b.flag) // 풀을 플래그 기준으로 정렬하고
-    const getUserFromPool = pool.matchMakingFront ? pool.shift : pool.pop // 유저를 뽑는 방식이다.
-    pool.matchMakingFront = !pool.matchMakingFront
-    while(pool.length < 12) { // pool의 크기가 12아래로 될때까지
-      const tempMatch = []
-      for(let i=0; i<12; i++) {
-        tempMatch.push(getUserFromPool())
-      }
-      tempMatch.forEach(reqNotAfk) // 모든 유저에 대해서 Afk 상태가 아닌지 확인 하는 요청을 보낸다.
-      setTimeout(() => checkMatchMakingRejected(matchset), 10000);
+const pickUserGroups = (array, userIndex) => {
+  const startIndex = customMath.overZero(userIndex - 12)
+  const endIndex = customMath.getMin(array.length-12, userIndex)
+  let minIndex = startIndex
+  let minValue = 10000000000000
+  for(let i = startIndex; i<= endIndex; i++) {
+    let standardDeviation = customMath.getStandardDeviation(array.slice(startIndex, startIndex+12))
+    if(standardDeviation < minValue) {
+      minIndex = i
+      minValue = standardDeviation
     }
-    pool.forEach(user => user.availCancel = true) // 남은 유저들에 대해 다시 매치를 취소할 수 있도록 한다.
   }
+  if(minValue > maximumStandrardDeviation) // 만약 최소 표준 편차 이상의 표준편차로 구성되었다면 이상한걸 리턴한다.
+    return
+  return minIndex
+}
+
+const test = () => {
+  const array = [1,2,3,4,5,6,7,8,9,10,1]
+  array.forEach((element, index) => {
+    console.log(array.splice(index, 1))
+  })
+}
