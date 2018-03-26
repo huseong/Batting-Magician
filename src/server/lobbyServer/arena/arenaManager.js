@@ -11,23 +11,19 @@ const Arena = require('../../../model/arena.js')
 
 // function 
 const setUserToWaitingPool = require('./function/setUserToWaitingPool.js')
-const generatePools = require('./function/generatePools.js')
 
 class MatchManage {
   constructor(serverName) {
-    this.waitingPools = generatePools() // 유저들이 대기하고 있는 풀이다.
-    // 12개의 티어에 해당하는 12개의 풀로 유저를 담아놓는다. 
+    this.waitingPool = [] // 유저들이 대기하고 있는 풀이다.
     this.matchPool = []
     this.userDic = {}
-    this.matchCycle = 5 // 풀을 확인하는 주기이다.
+    this.matchCycle = 15 // 15초마다 매칭 하기
     this.matchMin = 12 // 각 풀마다 합리적인 매칭을 위해 최소한으로 있어야하는 유저들의 수이다.
     Server.find({ 'info.serverName' : serverName }, server => {
       this.nextMatchID = server.info.nextMatchID
     })
     setInterval(this.checkPoolCondition, this.matchCycle) // 주기에 따라 매칭을 시작한다.
   }
-
-
 
   connectSocket(socket) { // 기본적으로 유저의 요청을 받을 수 있는 리스너를 열어준다. 
     socket.on('add waiting pool', () => setUserToWaitingPool(socket, this.userDic, this.waitingPool))
@@ -54,6 +50,4 @@ class MatchManage {
   noticeMatchMakingRejected(user) {
     user.socket.emit('match making rejected')
   }
-
-
 }
