@@ -22,7 +22,7 @@ module.exports = (user, tempMatch, manager) => {
       return
     generateMatch(tempMatch)
   })
-  // TODO: 매치를 취소한 경우
+  // TODO: 만약에 한 명의 유저라도 매치를 취소한 경우
   user.socket.on('res cancel match', () => cancelMatch(tempMatch, manager))
 }
 
