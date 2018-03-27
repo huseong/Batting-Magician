@@ -1,13 +1,21 @@
 // model
 const User = require('../../../../model/user.js')
+const Arena = require('../../../../model/arena.js')
 
-module.exports = tempMatch => {
-  tempMatch.forEach(matchUser => {
-    User.checkStatus(matchUser.socket, 'Lobby')
-    .then(user => {
-
-    })
-  });
+module.exports = (tempMatch, manager) => {
+  tempMatch.isStart = true // 게임이 시작했음을 알린다.
+  setUserStatus(tempMatch)
+  .then(() => Arena.generateMatch(tempMatch, manager))
 }
 
-const checkAllUserStatus = tempMatch
+// TODO: 유저의 상태를 Game으로 바꾼다.
+const setUserStatus = tempMatch => {
+  tempMatch.forEach(matchUser => {
+    const user = matchUser
+    user.info.status = 'Game'
+    user.save()
+  })
+}
+
+
+

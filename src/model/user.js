@@ -6,26 +6,35 @@ require('date-utils')
 const Hack = require('./hack.js')
 const Error = require('./error.js')
 
+const meta = new mongoose.Schema({
+  id : String, // 유저의 식별자. Google ID이다.
+  name : String, // 유저의 이름
+  epithet : String, // 형용어의 이름
+  isBanned : Boolean, // 유저가 밴이 됬는지
+  lastEnter : Date, // 유저가 마지막으로 접속한 날짜
+  profile : String, // 유저가 가진 프로필
+})
+
+const wealth = new mongoose.Schema({
+  money : Number,
+  jam : Number,
+  character : [{id : Number, level : Number}], // 보유한 캐릭터의 목록
+  card : [{id : Number, level: Number}], // 보유한 카드의 목록
+  profile : [String] // 보유한 프로필의 목록
+})
+
+const card = new mongoose.Schema({
+  
+})
+
 const schema = new mongoose.Schema({
-  meta : { // 유저에 대한 메타 정보
-    id : String, // 유저의 식별자. Google ID이다.
-    name : String, // 유저의 이름
-    epithet : String, // 형용어의 이름
-    isBanned : Boolean, // 유저가 밴이 됬는지
-    lastEnter : Date, // 유저가 마지막으로 접속한 날짜
-    profile : String, // 유저가 가진 프로필
-  },
+  meta : meta, // 유저에 대한 메타 정보
   info : {
-    wealth : { // 보유한 재산에 관련된 것
-      money : Number,
-      jam : Number,
-      character : [{id :  Number, level : Number}],
-      card : [{id : Number, level: Number}]
-    },
-    room : {
-      roomID : Number, // 유저가 방에 있다면 방의 이름
-      bannedRoomID : [Number] // 유저가 밴된 방의 ID 배열
-    },
+    wealth : wealth, // 보유한 재산에 관련된 것
+    // room : {
+    //   roomID : Number, // 유저가 방에 있다면 방의 이름
+    //   bannedRoomID : [Number] // 유저가 밴된 방의 ID 배열
+    // },
     users : { // 다른 유저들과의 정보를 저장하는 것 이다.
       friend : Array, // 유저의 친구 목록. 해당 유저의 meta.id가 들어간다.
       block : Array // 차단한 유저의 목록. 해당 유저의 meta.name이 들어간다.
@@ -38,9 +47,8 @@ const schema = new mongoose.Schema({
     status : String, // 유저의 상태
   },
   game : {
-    id : Number,
-    isGameplay : Boolean,
-    haveCharacter : Array, // 유저가 해당 캐릭터를 가졌는지
+    id : Number, // 유저가 속한 게임
+    isGameplay : Boolean, // 유저의 현재 게임 플레이 여부
     character : String // 유저가 현재 쓰는 캐릭터
   }
 })

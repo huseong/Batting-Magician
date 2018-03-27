@@ -4,6 +4,7 @@
 const generateMatch = requie('./generateMatch.js')
 const customMath = require('../../../../util/customMath.js')
 const checkNotAfk = require('./checkNotAfk.js')
+const cancelMatch = require('./cancelMatch.js')
 
 // value
 const maximumStandrardDeviation = 50 // 매치가 성사되기 위한 최대한의 표준편차
@@ -24,9 +25,16 @@ module.exports = (manager, matchMin) => {
         timeOrderedArray.splice(rankOrderedArray.indexOf(user), 1) // timeOrderedArray 에 만들어진 유저들을 제거한다.
         checkNotAfk(user, tempMatch, manager) // user가 Afk상태인지 확인한다.
       })
+      tempMatch.isStart = false
+      setTimeout(() => checkMatchStarted(tempMatch, manager), 8000) // 8초 뒤에 게임이 시작한지 확인한다.
     }
   })
-  waitingPool = rankOrderedArray
+  waitingPool = [... rankOrderedArray]
+}
+
+const checkMatchStarted = (tempMatch, manager) => {
+  if(!tempMatch.isStart)
+    cancelMatch(tempMatch, manager)
 }
 
 // TODO: 해당 유저를 포함하는 유저 그룹 중 가장 합리적인 그룹을 찾는다.

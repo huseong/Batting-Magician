@@ -19,6 +19,7 @@ class MatchManage {
     this.matchPool = []
     this.matchCycle = 12 // 15초마다 매칭 하기
     this.matchMin = 12 // 각 풀마다 합리적인 매칭을 위해 최소한으로 있어야하는 유저들의 수이다.
+    this.serverName = serverName // 이 아레나가 속한 서버의 이름이다.
     Server.find({ 'info.serverName' : serverName }, server => {
       this.nextMatchID = server.info.nextMatchID
     })

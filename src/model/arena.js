@@ -8,39 +8,49 @@ const mongoose = require('mongoose')
 // model
 const Error = require('./error.js')
 
+const meta = new mongoose.Schema({
+  id : Number, // 해당 아레나에 대한 고유 식별자이다.
+  server : String, // 이 아레나가 속한 서버의 이름
+  date : Date, // 매치 진행 날짜
+  users : Array // 유저들의 순수 아이디가 들어간다.
+})
+
+const user = new mongoose.Schema({
+  log : String
+})
+
+const map = new mongoose.Schema({
+  sequence : Array,
+  log : String
+})
+
 const schema = new mongoose.Schema({
-  meta : {
-    id : Number, // 해당 아레나에 대한 고유 식별자이다.
-    server : String, // 이 아레나가 속한 서버의 이름
-    date : Date, 
-    tier : Number // 해당 아레나가 몇 티어에서 진행된 아레나인지
-  },
+  meta : meta,
   info : {
-    userList : Array, // 유저의 아이디들이 들어간다.
+    users : { // 유저의 아이디들이 들어간다.
+      red : Array,
+      blue : Array,
+      green : Array,
+      yellow : Array
+    }, 
     chatLog : String // 채팅 로그들이 들어간다.
   }
 })
 
-schema.statics.generateNewArena = (server, tempMatch) => {
-    let newMatch = new room({
-      meta : {
-        id : id,
-        serverName : server,
-        date : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS'),
-      },
+schema.statics.generateNewArena = (manager, tempMatch) => 
+  new Promise((resolve, reject) => {
+    const meta = {
+      id : manager.nextMatchID++,
+      server : manager.serverName.id,
+      date : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS'),
+      users : tempMatch.map(matchUser => matchUser.user.meta.id)
+    }
+    const newArena = new schema({
+      meta : meta,
       info : {
-        
       }
     })
-    
-    newMatch.save(err => {
-      if(err) {
-        Error.create('Match DB Error')
-        // reject()
-      }
-    })
-    return newMatch
-}
+  })
 
 const room = mongoose.model('arena', schema)
 
