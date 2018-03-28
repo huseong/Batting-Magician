@@ -1,4 +1,8 @@
+// util
 const randomDice = require('../util/randomDice.js')
+
+// function
+const customMath = require('../../util/customMath.js')
 
 class Character {
   constructor(io, roomID, num) {
@@ -6,8 +10,7 @@ class Character {
       io : io, // io 모듈
       roomID : roomID, // 이 슬라임이 속한 방의 ID
       num : num, // 이 슬라임의 숫자
-      isGameEnd : false,
-      matchWeight : 100 // 경기에 참가자로 당첨될 확률
+      isGameEnd : false, // 게임이 끝났는지
    }
 
     this.health = {
@@ -25,29 +28,32 @@ class Character {
         standradSpeed : 0.5, // 이 캐릭터의 원래 속도 (초당 점프 속도)
         currentSpeed : 1.2, // 이 캐릭터의 현재 속도
         acceleration : 0.1, // 이 캐릭터의 가속도
-        turn : {
-          left : Symbol('left'), // 좌측으로 회전하는 경우
-          right : Symbol('right'), // 우측으로 회전하는 경우
-          direction : 0, // 회전 방향
-          turnAmount : 0, // 이게 1이 되면 회전을 할 수 있다.
-        },
 
-        reactSpeed : 0.03
+
       },
-      userInput : { // 유저가 입력해서 바뀌는 부분
+      userInput : { 
         deltaSpeed : 0,
-        deltaTurn : 'left',
-        turnDirection : 0
       }
       // location : {
       //   x : 0, y : 0
       // } // 이 캐릭터의 현 위치
     }
+    this.rotate = {
+      info : { // 유저 입력으로 바뀌지 않는 부분
+        rotateAmount : 0, // 이게 1이 되면 회전을 시도 할 수 있다
+        reactSpeed : 0.03 // 0.05초마다의 증감치.
+      },
+      userInput : { // 유저가 입력해서 바뀌는 부분
+        isRotateButtonDown : false,
+      }
+    }
   }
 
-  turn() {
-    setInterval()
+  // TODO: RotateAmount의 setter이다.
+  setRotateAmount(value) {
+    this.rotate.info.rotateAmount = customMath.clampZeroToOne(this.rotate.info.rotateAmount)
   }
+
 
   
   jump() {

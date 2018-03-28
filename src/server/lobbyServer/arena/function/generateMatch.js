@@ -1,6 +1,7 @@
 // model
 const User = require('../../../../model/user.js')
 const Arena = require('../../../../model/arena.js')
+const Error = require('../../../../model/error.js')
 
 module.exports = (tempMatch, manager) => {
   tempMatch.isStart = true // 게임이 시작했음을 알린다.
@@ -13,9 +14,10 @@ const setUserStatus = tempMatch => {
   tempMatch.forEach(matchUser => {
     const user = matchUser
     user.info.status = 'Game'
-    user.save()
+    user.save(err => {
+      if(err) {
+        Error.create('DB Error in Set User Status in Generate Match')
+      }
+    })
   })
 }
-
-
-
