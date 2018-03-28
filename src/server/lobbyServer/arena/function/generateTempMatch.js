@@ -9,8 +9,9 @@ const cancelMatch = require('./cancelMatch.js')
 // value
 const maximumStandrardDeviation = 50 // 매치가 성사되기 위한 최대한의 표준편차
 
-module.exports = (manager, matchMin) => {
+module.exports = manager => {
   const waitingPool = manager.waitingPool
+  const matchMin = manager.matchMin
   if(waitingPool.length < matchMin)
     return
   waitingPool.forEach(user => user.availCancel = false)

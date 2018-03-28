@@ -14,16 +14,17 @@ const setUserToWaitingPool = require('./function/setUserToWaitingPool.js')
 const generateTempMatch = require('./function/generateTempMatch.js')
 
 class MatchManage {
-  constructor(serverName) {
+  constructor(serverName, gameServer) {
+    this.gameServer = gameServer // 게임 서버
     this.waitingPool = [] // 유저들이 대기하고 있는 풀이다.
     this.matchPool = []
-    this.matchCycle = 12 // 15초마다 매칭 하기
+    this.matchCycle = 12 // 12초마다 매칭 하기
     this.matchMin = 12 // 각 풀마다 합리적인 매칭을 위해 최소한으로 있어야하는 유저들의 수이다.
     this.serverName = serverName // 이 아레나가 속한 서버의 이름이다.
     Server.find({ 'info.serverName' : serverName }, server => {
       this.nextMatchID = server.info.nextMatchID
     })
-    setInterval(generateTempMatch, this.matchCycle) // 주기에 따라 매칭을 시작한다.
+    setInterval(generateTempMatch.bind(undefined, this), this.matchCycle) // 주기에 따라 매칭을 시작한다.
   }
 
   connectSocket(socket) { // 기본적으로 유저의 요청을 받을 수 있는 리스너를 열어준다. 

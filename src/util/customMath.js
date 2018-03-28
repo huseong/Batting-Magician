@@ -37,6 +37,11 @@ const clampZeroToOne = value => {
 }
 exports.clampZeroToOne = clampZeroToOne
 
+// TODO: 해당 수 사이의 무작위 정수 값을 리턴한다. 최대 최소값을 포함한다. 
+const randomRange = (min, max) =>
+  min + Math.floor(Math.random() * (max-min+1))
+exports.randomRange = randomRange
+
 // TODO: 해당 배열의 값들의 분산을 반환한다.
 const getVariance = array => {
   let avg = getAvg(array)

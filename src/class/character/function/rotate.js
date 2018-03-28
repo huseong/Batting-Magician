@@ -22,7 +22,6 @@ const onTurnButtonDown = (socket, rotate) =>  {
   socket.removeAllListeners('turn button down') // 턴 버튼이 다시 못 눌리게 만든다.
   socket.on('turn button up')
   rotate.userInput.isRotateButtonOn = true // 버튼이 눌린 것을 true로 바꾼다.
-  
 }
 
 const changeRotateAmount = rotate => {
