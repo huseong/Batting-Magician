@@ -6,7 +6,7 @@ exports.schema = new mongoose.Schema({
   epithet : String, // 형용어의 이름
   isBanned : Boolean, // 유저가 밴이 됬는지
   lastEnter : Date, // 유저가 마지막으로 접속한 날짜
-  profile : String, // 유저가 가진 프로필
+  profile : String, // 유저가 현재 설정한 프로필
 })
 
 exports.create = (id, name) =>

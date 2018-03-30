@@ -27,7 +27,7 @@ schema.statics.generateNewArena = (manager, tempMatch) =>
       meta : meta.create(manager, tempMatch),
       info : {
         map : map.create(),
-        users : users.create()
+        users : users.create(tempMatch)
       }
     })
   })

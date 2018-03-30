@@ -23,11 +23,6 @@ const schema = new mongoose.Schema({
     achieve : Number, // 유저가 성취한 업적
     status : String, // 유저의 상태
   },
-  game : {
-    id : Number, // 유저가 속한 게임
-    isGameplay : Boolean, // 유저의 현재 게임 플레이 여부
-    character : String // 유저가 현재 쓰는 캐릭터
-  }
 })
 
 schema.statics.create = (id, name) => 
@@ -49,12 +44,6 @@ schema.statics.create = (id, name) =>
         deck : deck.create(),
         status : 'Lobby'
       },
-      game : {
-        id : -1,
-        isGameplay : false,
-        haveCharacter : [...Array(10)].fill(false),
-        character : 'Dog'
-      }
     })
     newUser.save(err => {
       if(err)
@@ -67,8 +56,8 @@ schema.statics.create = (id, name) =>
 // 만약 그 상태가 아니라면 핵 리스트에 추가한다.
 schema.statics.checkStatus = (socket, status) =>
   new Promise((resolve, reject) => {
-    socket.emit('get google')
-    socket.isChecked = false
+    socket.emit('get google') // 유저에 google ID를 요청한다.
+    socket.isChecked = false 
     socket.on('get google', ({id}) => {
       if(!id) {
         Hack.create('ID Not Found')
