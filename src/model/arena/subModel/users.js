@@ -25,4 +25,12 @@ exports.create = tempMatch =>
   })
 
 const generateTeam = (indexArr, tempMatch) =>
-  indexArr.map(index => User.create(tempMatch[index].user))
+  indexArr.map((userIndex, elementIndex) => setUserInTeam(tempMatch[userIndex].user, elementIndex))
+
+const setUserInTeam = user => {
+  user.info.arena.gameID = tempMatch.gameID
+  user.info.arena.isGamePlaying = true
+  user.info.status = 'Arena'
+  user.save()
+  User.create(user)
+}

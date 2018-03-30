@@ -23,6 +23,7 @@ const schema = new mongoose.Schema({
 
 schema.statics.generateNewArena = (manager, tempMatch) => 
   new Promise((resolve, reject) => {
+    tempMatch.gameID = manager.nextMatchID++
     const newArena = new schema({
       meta : meta.create(manager, tempMatch),
       info : {
@@ -32,6 +33,6 @@ schema.statics.generateNewArena = (manager, tempMatch) =>
     })
   })
 
-const room = mongoose.model('arena', schema)
+const arena = mongoose.model('arena', schema)
 
-module.exports = room
+module.exports = arena

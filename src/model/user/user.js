@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 require('date-utils')
 
 // model
-const Hack = require('./hack.js')
+const Crack = require('./crack.js')
 const Error = require('./error.js')
 
 // subDoc
@@ -31,7 +31,7 @@ schema.statics.create = (id, name) =>
       if(err) {
         Error.create('DB Error in User Create')
       }
-      if(user) {
+      if(user) { // 만약 유저가 존재한다면
         return reject()
       }
     })
@@ -59,21 +59,15 @@ schema.statics.checkStatus = (socket, status) =>
     socket.emit('get google') // 유저에 google ID를 요청한다.
     socket.isChecked = false 
     socket.on('get google', ({id}) => {
-      if(!id) {
-        Hack.create('ID Not Found')
-        return reject('can not find id')
-      }
+      if(!id)
+        return reject(Crack.create('ID Not Found'))
       user.findOne({'meta.id' : id}, (err, user) => {
-        if(!user) { // 이거 못찾으면 크랙유저
-          Hack.create('User Not Found', null, id)
-          return reject('Location Hack')
-        }
-        if(user.info.status === status) {
-          resolve(user)
-        } else {
-          Hack.create('Location Hack', user, id)
-          return reject('Location Hack')
-        }
+        if(!user) // 이거 못찾으면 크랙유저
+          return reject(Crack.create('Can Not Find User In Check Status', id))
+        if(user.info.status === status)
+          return resolve(user)
+        else
+          return reject(Crack.create('User Location Not Correct', id))
       })
     })
   })
@@ -91,5 +85,5 @@ schema.methods.sendData = function() {
   return param
 }
 
-  const user = mongoose.model('user', schema)
+const user = mongoose.model('user', schema)
 module.exports = user

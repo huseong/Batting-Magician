@@ -3,25 +3,27 @@ require('date-utils')
 
 const schema = new mongoose.Schema({
   date : Date,
-  hackName : String,
+  crackName : String,
   userName : String,
   id : String
 })
 
-schema.statics.create = (name, userID) => {
+// TODO: Crack을 만들고 저장한다. 또한 Disconnect Message를 위해 메세지를 리턴해준다.
+schema.statics.create = (crackName, userID) => {
   const date = new Date()
-  let newHack = new hack({
+  let newCrack = new crack({
     hackName : name,
     id : userID ? userID : "Not Auth",
     date : date.toFormat('YYYY-MM-DD HH24:MI:SS')
   })
-  console.log('Created Hack : '+ hackName)
+  console.log('Created Crack : '+ crackName)
   newHack.save(err => {
     if(err)
       console.log('DB Error : ', err)
     })
+  return 'Crack Detected'
 }
 
-const hack = mongoose.model('hack', schema)
+const crack = mongoose.model('crack', schema)
 
-module.exports = hack
+module.exports = crack
