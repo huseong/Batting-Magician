@@ -42,6 +42,11 @@ const randomRange = (min, max) =>
   min + Math.floor(Math.random() * (max-min+1))
 exports.randomRange = randomRange
 
+// TODO: 해당 배열의 무작위 값을 꺼낸 뒤 반환한다. 
+const popRandomArrayValue = array =>
+  array.splice(randomRange(0, array.length-1), 1)[0]
+exports.popRandomArrayValue = popRandomArrayValue
+
 // TODO: 해당 배열의 값들의 분산을 반환한다.
 const getVariance = array => {
   let avg = getAvg(array)

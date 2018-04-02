@@ -3,7 +3,7 @@
 */
 const User = require('../../../model/user.js')
 const Hack = require('../../../model/hack.js')
-const signUpRegex = /^[가-힣0-9]{2,8}$|^[a-zA-Z0-9]{2,13}$/
+const signUpRegex = /^[가-힣0-9 ]{2,8}$|^[a-zA-Z0-9]{2,13}$/
 module.exports = (socket, id) => 
   new Promise((resolve, reject) => {
     socket.emit('create sign up form')

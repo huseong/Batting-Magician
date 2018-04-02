@@ -8,7 +8,7 @@ module.exports = (arena, socket, user) => {
   const users = arena.users
   const id = user.meta.id
   const teamName = usersModel.red.includes(id) ? 'red' : usersModel.blue.includes(id) ? 'blue' : usersModel.green.includes(id) ? 'green' : 'yellow'
-  socket.join(arena.id + teamName)
+  socket.join(arena.id + teamName) // socket이 팀에 들어갈 수 있게 할당한다.
   if(users[teamName]) { // 만약 users의 teamName이 undefined면
     users[teamName] = [] // arena.users의 속성으로 teamName에 해당하는 배열을 만든다 
   }
