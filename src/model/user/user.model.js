@@ -27,15 +27,15 @@ const schema = new mongoose.Schema({
 
 schema.statics.create = (id, name) => 
   new Promise((resolve, reject) => {
-    user.findOne({ info : { name : name } }, (err, user) => { // 만약에 이미 같은 이름을 가진 유저가 있다면
+    userModel.findOne({ info : { name : name } }, (err, foundUser) => { // 만약에 이미 같은 이름을 가진 유저가 있다면
       if(err) {
         Error.create('DB Error in User Create')
       }
-      if(user) { // 만약 유저가 존재한다면
+      if(foundUser) { // 만약 유저가 존재한다면
         return reject()
       }
     })
-    const newUser = new user({
+    const newUserModel = new userModel({
       meta : meta.create(id, name),
       info : {
         wealth : wealth.create(),
@@ -45,11 +45,11 @@ schema.statics.create = (id, name) =>
         status : 'Lobby'
       },
     })
-    newUser.save(err => {
+    newUserModel.save(err => {
       if(err)
         Error.create('User DB Error in Save User : ', err)
     })
-    resolve(newUser)
+    resolve(newUserModel)
   })
 
 // TODO: 유저가 해당 상태인지를 확인한다.
@@ -61,22 +61,21 @@ schema.statics.checkStatus = (socket, status) =>
     socket.on('get google', ({id}) => {
       if(!id)
         return reject(Crack.create('ID Not Found'))
-      user.findOne({'meta.id' : id}, (err, user) => {
+      userModel.findOne({'meta.id' : id}, (err, userModel) => {
         if(!user) // 이거 못찾으면 크랙유저
           return reject(Crack.create('Can Not Find User In Check Status', id))
         if(user.info.status === status)
-          return resolve(user)
+          return resolve(userModel)
         else
           return reject(Crack.create('User Location Not Correct', id))
       })
     })
   })
 
-schema.methods.sendData = function() {
+schema.methods.sendDataForLobby = function() {
   let param = {
     meta : {
       name : this.meta.name,
-      epithet : this.info.epithet,
       profile : this.meta.profile
     },
     wealth : this.info.wealth,
@@ -85,5 +84,5 @@ schema.methods.sendData = function() {
   return param
 }
 
-const user = mongoose.model('user', schema)
-module.exports = user
+const userModel = mongoose.model('user', schema)
+module.exports = userModel

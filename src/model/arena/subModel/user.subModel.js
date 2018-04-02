@@ -5,7 +5,6 @@ exports.schema = new mongoose.Schema({
   meta : {
     id : String,
     name : String,
-    epithet : String,
     profile : String
   },
   info : {
@@ -21,8 +20,7 @@ exports.create = user, elementIndex => new exports.schema({
   meta : {
     id : user.meta.id,
     name : user.meta.name,
-    epithet : user.meta.epithet,
-    user : user.meta.profile
+    profile : user.meta.profile
   },
   info : {
     deck : user.info.deck.deckList[user.info.deck.defaultDeckIndex],

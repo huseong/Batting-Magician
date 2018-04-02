@@ -9,7 +9,7 @@ const mongoose = require('mongoose')
 const Error = require('./error.js')
 
 // inside model
-const meta = require('./arena/meta.js')
+const meta = require('./subModel/meta.subModel.js')
 const map = require('./arena/map.js')
 const users = require('./arena/users.js')
 
