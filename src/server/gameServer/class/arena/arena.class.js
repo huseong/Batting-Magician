@@ -20,6 +20,7 @@ class Arena {
   connectUser(socket, userModel) { // 유저가 연결되면 해당 유저를 Class로 만들고
     const user = new User(this, socket, userModel)
     this.arenaModel.sendArenaInfo(socket) // Arena 정보를 보내준다.
+    socket.emit('show short view')
   }
 }
 

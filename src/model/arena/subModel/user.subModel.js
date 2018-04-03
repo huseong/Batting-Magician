@@ -38,7 +38,6 @@ exports.generateInfo = user => {
     name : user.name,
     profile : user.profile,
     flag : user.info.flag,
-    sequence : user.info.sequence,
-    character : user.info.character
+    sequence : user.info.sequence
   }
 }
