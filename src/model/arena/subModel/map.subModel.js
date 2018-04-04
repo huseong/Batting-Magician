@@ -18,7 +18,7 @@ exports.create = () =>
 
 const generateMapSequence = () => {
   const mapArray = []
-  const mapList = ['Forest', 'Cementry', 'Desert', 'Swamp', 'Snow Field']
+  const mapList = ['Forest', 'Cementry', 'Desert', 'Swamp', 'Paradox']
   for(let i = 0; i<5; i++) {
     const randomValue = customMath.randomRange(0, mapList.length-1)
     mapArray.push(mapList.splice(randomValue, 1)[0])
