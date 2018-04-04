@@ -22,26 +22,12 @@ class Character {
     }
   }
 
-  generateMoveInfo() {
-    this.move = { // 이동에 관한 정보
-      info : { // 유저 입력으로 바뀌지 않는 부분
-        standradSpeed : 0.5, // 이 캐릭터의 원래 속도 (초당 점프 속도)
-        currentSpeed : 1.2, // 이 캐릭터의 현재 속도
-        acceleration : 0.1, // 이 캐릭터의 가속도
-
-
-      },
-      userInput : { 
-        deltaSpeed : 0,
-      }
-      // location : {
-      //   x : 0, y : 0
-      // } // 이 캐릭터의 현 위치
-    }
-
+  start() {
+    this.meta.io.to(this.meta.roomID).emit('game start', { serverTime : this.meta.serverTime })
+    setTimeout(() => {
+      this.jump()
+    }, this.move.jumpSpeed * 1000)
   }
-
-
   
   jump() {
     this.move.location += this.move.speed
@@ -69,13 +55,6 @@ class Character {
   //   }
   //   this.meta.io.to(this.meta.roomID).emit('pos correction', param)
   // }
-  
-  start() {
-    this.meta.io.to(this.meta.roomID).emit('game start', { serverTime : this.meta.serverTime })
-    setTimeout(() => {
-      this.jump()
-    }, this.move.jumpSpeed * 1000)
-  }
 
   // enterLodgement() { // 거점에 들어갈 때, 주사위를 굴려 속도가 늘어나고 체력을 회복한다.
   //   return new Promise(resolve => {

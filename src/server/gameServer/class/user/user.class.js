@@ -2,9 +2,10 @@
 const setUserInTeam = require('./function/setUserInTeam.js')
 
 class User {
-  // 생성자에서 해야할 일
+  // TODO: 생성자가 수행해야하는 일
   // 유저를 팀에 할당함
   // 유저의 정보를 가져옴
+  // 유저에게 팀의 정보를 보내줌
   constructor(arena, socket, userModel) {
     this.meta = {
       id : userModel.meta.id, // 유저 모델의 ID로 이 User Class의 ID를 설정한다.

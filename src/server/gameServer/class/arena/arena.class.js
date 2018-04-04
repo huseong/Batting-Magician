@@ -24,6 +24,7 @@ class Arena {
 
   // TODO: ArenaModel에서 user를 찾아서 할당한다. 
   findUserTeam(id) {
+    
   }
 
   saveArenaInfo() {
