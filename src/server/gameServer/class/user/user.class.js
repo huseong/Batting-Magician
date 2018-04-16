@@ -17,6 +17,7 @@ class User {
     }
     this.arena = arena
     this.socket = socket
+    this.isReady = false
     socket.join(arena.id) // 아레나의 ID로 socket을 Join시킨다.
     setUserInTeam(arena, socket, this) // user를 팀에 할당한다.
   }
