@@ -1,10 +1,11 @@
+// TODO: 해당 아레나의 맵을 담는 스키마
+
 // module
 const mongoose = require('mongoose')
 
 // function
 const customMath = require('../../util/customMath.js')
 
-// TODO: 해당 매치의 맵을 담는 스키마
 exports.schema = new mongoose.Schema({
   sequence : Array,
   detail : String,

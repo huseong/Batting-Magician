@@ -3,10 +3,11 @@
 만약 문제가 없다면 다음으로 넘어간다.
 문제가 있다면 그냥 연결을 끊는다.
 */
-const serverVersion = '0.1.0'
+const serverVersion = '0.1.0' // 서버의 최신 버전이다.
+
 module.exports = socket =>  // 클라이언트의 버전을 확인하는 함수
   new Promise((resolve, reject) => {
-  socket.isVersionChecked = false
+  socket.isVersionChecked = false // 소켓이 버전을 확인 했는지.
   socket.emit('version') // 클라이언트에 버전 요청을 보냄.
   setTimeout(() => { // 5초 안에 클라이언트로부터 답이 오지 않으면 연결을 끊는다.
     if(!socket.isVersionChecked)

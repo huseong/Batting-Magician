@@ -5,9 +5,9 @@
 
 // model
 const modelUrl = '../../../model/'
-const User = require(modelUrl + 'user.js')
-const Hack = require(modelUrl + 'hack.js')
-const Error = require(modelUrl + 'error.js')
+const User = require(modelUrl + 'user/user.model.js')
+const Hack = require(modelUrl + 'crack.model.js')
+const Error = require(modelUrl + 'error.model.js')
 const signUp = require('./signUp.js')
 const getGoogleID = require('../../../util/getGoogleID.js')
 

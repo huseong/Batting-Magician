@@ -5,11 +5,11 @@ const auth = require('./function/auth.js')
 // util
 const disconnectSocket = require('../../util/disconnectSocket.js')
 
-class server {
+class FrontServer {
   constructor(io) {
     console.log('Front Server On!')
     io.on('connect', socket => {
-      console.log('server connected. id : ', socket.id)
+      console.log('User connected. id : ', socket.id)
       checkVersion(socket)
       .then(auth)
       .then(user => this.toLobbyServer(socket, user))
@@ -29,7 +29,7 @@ class server {
           Error.create('User DB Error')
           return reject('DB Error')
         }
-        socket.emit('to lobby server')
+        socket.emit('to lobby server') // 클라이언트에게 로비 서버로 이동하도록 명령한다.
         setTimeout(() => reject('disconnect from front'), 1000) // 1초 뒤에 연결을 종료함
       })
     })
@@ -37,5 +37,5 @@ class server {
 
 }
 
-module.exports = server
+module.exports = FrontServer
 

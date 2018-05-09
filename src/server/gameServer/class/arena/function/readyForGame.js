@@ -10,3 +10,12 @@ module.exports = arena => {
   setInterval(() => { arena.time-- }, 1000)
   
 }
+
+const countDown = arena => {
+  arena.time--
+  if(arena.time <= 0) {
+    
+    return
+  }
+  setTimeout(() => countDown(arena), 1000)
+}
