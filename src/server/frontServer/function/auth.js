@@ -4,11 +4,14 @@
 */
 
 // model
-const modelUrl = '../../../model/'
-const User = require(modelUrl + 'user/user.model.js')
-const Hack = require(modelUrl + 'crack.model.js')
-const Error = require(modelUrl + 'error.model.js')
+const User = require('../../../model/user/user.model.js')
+const Crack = require('../../../model/etc/crack.model.js')
+const Error = require('../../../model/etc/error.model.js')
+
+// function
 const signUp = require('./signUp.js')
+
+// util
 const getGoogleID = require('../../../util/getGoogleID.js')
 
 module.exports = socket => 
@@ -25,8 +28,8 @@ module.exports = socket =>
 const isVersionChecked = socket => 
   new Promise((resolve, reject) => {
     if(!socket.isVersionChecked) { // socket에서 version Check를 수행했는지 확인한다.
-      Hack.create('Version Check Skip')
-      return reject('Hack')
+      Crack.create('Version Check Skip')
+      return reject('Crack')
     }
     resolve(socket)
   })

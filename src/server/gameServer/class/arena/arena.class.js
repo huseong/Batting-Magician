@@ -18,7 +18,7 @@ class Arena {
   }
 
   connectUser(socket, userModel) { // 유저가 연결되면
-    const user = new User(this, socket, userModel)
+    const user = new User(this, socket, userModel) // user Class 를 만든다.
     this.arenaModel.sendArenaInfo(socket) // 해당 socket에 아레나의 정보를 보내준다.
   }
 

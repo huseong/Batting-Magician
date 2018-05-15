@@ -6,9 +6,6 @@ const customMath = require('../../../../util/customMath.js')
 const checkNotAfk = require('./checkNotAfk.js')
 const cancelMatch = require('./cancelMatch.js')
 
-// value
-const maximumStandrardDeviation = 50 // 매치가 성사되기 위한 최대한의 표준편차
-
 module.exports = manager => {
   const waitingPool = manager.waitingPool
   const matchMin = manager.matchMin
@@ -36,22 +33,4 @@ module.exports = manager => {
 const checkMatchStarted = (tempMatch, manager) => {
   if(!tempMatch.isStart)
     cancelMatch(tempMatch, manager)
-}
-
-// TODO: 해당 유저를 포함하는 유저 그룹 중 가장 합리적인 그룹을 찾는다.
-const pickUserGroups = (array, userIndex) => {
-  const startIndex = customMath.overZero(userIndex - 12)
-  const endIndex = customMath.getMin(array.length-12, userIndex)
-  let minIndex = startIndex
-  let minValue = 10000000000000
-  for(let i = startIndex; i<= endIndex; i++) {
-    let standardDeviation = customMath.getStandardDeviation(array.slice(startIndex, startIndex+12))
-    if(standardDeviation < minValue) {
-      minIndex = i
-      minValue = standardDeviation
-    }
-  }
-  if(minValue > maximumStandrardDeviation) // 만약 최소 표준 편차 이상의 표준편차로 구성되었다면 이상한걸 리턴한다.
-    return
-  return array.splice(minIndex, 12)
 }

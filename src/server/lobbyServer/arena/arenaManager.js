@@ -13,7 +13,7 @@ const Arena = require('../../../model/arena.js')
 const setUserToWaitingPool = require('./function/setUserToWaitingPool.js')
 const generateTempMatch = require('./function/generateTempMatch.js')
 
-class MatchManage {
+class ArenaManager {
   constructor(serverName, gameServer) {
     this.gameServer = gameServer // 게임 서버
     this.waitingPool = [] // 유저들이 대기하고 있는 풀이다.
