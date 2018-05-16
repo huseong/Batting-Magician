@@ -3,23 +3,23 @@ const mongoose = require('mongoose')
 require('date-utils')
 
 // model
-const Crack = require('./crack.js')
-const Error = require('./error.js')
+const Crack = require('../etc/crack.model.js')
+const Error = require('../etc/error.model.js')
 
 // subDoc
-const meta = require('./subDoc/meta.js')
-const wealth = require('./subDoc/wealth.js')
-const relation = require('./subDoc/relation.js')
-const arena = require('./subDoc/arena.js')
-const deck = require('./subDoc/deck.js')
+const meta = require('./subDoc/meta.subModel.js')
+const wealth = require('./subDoc/wealth.subModel.js')
+const relation = require('./subDoc/relation.subModel.js')
+const arena = require('./subDoc/arena.subModel.js')
+const deck = require('./subDoc/deck.subModel.js')
 
 const schema = new mongoose.Schema({
-  meta : meta.schema, // 유저에 대한 메타 정보
+  meta : meta, // 유저에 대한 메타 정보
   info : {
-    wealth : wealth.schema, // 보유한 재산에 관련된 것
-    relation : relation.schema, // 
-    arena : arena.schema, // 아레나에 관한 것
-    deck : deck.schema,
+    wealth : wealth, // 보유한 재산에 관련된 것
+    relation : relation, // 
+    arena : arena, // 아레나에 관한 것
+    deck : deck,
     achieve : Number, // 유저가 성취한 업적
     status : String, // 유저의 상태
   },
@@ -27,14 +27,6 @@ const schema = new mongoose.Schema({
 
 schema.statics.create = (id, name) => 
   new Promise((resolve, reject) => {
-    userModel.findOne({ info : { name : name } }, (err, foundUser) => { // 만약에 이미 같은 이름을 가진 유저가 있다면
-      if(err) {
-        Error.create('DB Error in User Create')
-      }
-      if(foundUser) { // 만약 유저가 존재한다면
-        return reject()
-      }
-    })
     const newUserModel = new userModel({
       meta : meta.create(id, name),
       info : {
@@ -46,10 +38,9 @@ schema.statics.create = (id, name) =>
       },
     })
     newUserModel.save(err => {
-      if(err)
-        Error.create('User DB Error in Save User : ', err)
+      if(!err)
+        resolve(newUserModel)
     })
-    resolve(newUserModel)
   })
 
 // TODO: 유저가 해당 상태인지를 확인한다.
@@ -71,6 +62,19 @@ schema.statics.checkStatus = (socket, status) =>
       })
     })
   })
+
+// TODO: 사용자가 게임을 플레이한다는 것을 DB 상에서 업데이트함.
+schema.methods.setUserGamePlaying = function(gameID) {
+  return new Promise(resolve => {
+    user.info.arena.gameID = gameID
+    user.info.arena.isGamePlaying = true
+    user.info.status = 'Arena'
+    user.save(err => {
+      if(!err)
+        resolve()
+    })
+  })
+}
 
 schema.methods.sendDataForLobby = function() {
   let param = {

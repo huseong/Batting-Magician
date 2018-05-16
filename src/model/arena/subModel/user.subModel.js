@@ -1,7 +1,7 @@
 // module
 const mongoose = require('mongoose')
 
-exports.schema = new mongoose.Schema({
+const schema = new mongoose.Schema({
   meta : {
     id : String,
     name : String,
@@ -10,14 +10,14 @@ exports.schema = new mongoose.Schema({
   info : {
     deck : [{ id : Number, level : Number }], // 현재 사용하는 덱.
     character : {id : Number, class : Number, level : Number, exp : Number }, // 사용하는 캐릭터
-    sequence : Number,
+    sequence : Number, // 순서
     flag : Number,
     chatLog : String
   },
   log : String
 })
 
-exports.create = user, elementIndex => new exports.schema({
+schema.statics.create = (user, elementIndex) => new schema({
   meta : {
     id : user.meta.id,
     name : user.meta.name,
@@ -33,11 +33,14 @@ exports.create = user, elementIndex => new exports.schema({
   log : ""
 })
 
-exports.generateInfo = user => {
+// ShortView를 위해 만들어야 하는 Info
+schema.static.generateInfoForShortView = function() {
   return {
-    name : user.name,
-    profile : user.profile,
+    name : this.meta.name,
+    profile : this.meta.profile,
     flag : user.info.flag,
     sequence : user.info.sequence
   }
 }
+
+module.exports = schema

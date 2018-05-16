@@ -5,14 +5,15 @@
 const mongoose = require('mongoose')
 const Error = require('./error.js')
 const schema = new mongoose.Schema({
-    info : {
-        serverName : String,
-        nextMatchID : Number
-    }
+  info : {
+    serverName : String,
+    nextArenaID : Number
+  }
 })
 
-schema.methods.getRoomID = function() {
-    let id = this.info.currentRoomID++
+// TODO: 아레나 아이디를 요청한다.
+schema.methods.getNextID = function() {
+    let id = this.info.nextArenaID++
     this.save(err => Error.create('Server Save Error'))
     return id
 }

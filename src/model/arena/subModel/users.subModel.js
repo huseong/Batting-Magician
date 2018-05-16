@@ -7,41 +7,44 @@ const User = require('./user.subModel.js')
 // util
 const popRandomArrayValue = require('../../../util/customMath.js').popRandomArrayValue
 
-exports.schema = new mongoose.Schema({
+const schema = new mongoose.Schema({
   red : [User.schema],
   blue : [User.schema],
   green : [User.schema],
   yellow : [User.schema]
 })
 
-exports.create = tempMatch => {
-  const lowIndex = [... new Array(4)].map((value, index) => index)
-  const middleIndex = [... new Array(4)].map((value, index) => index+4)
-  const highIndex = [... new Array(4)].map((value, index) => index+8)
-  const getRandomArray = () => {
-    return [popRandomArrayValue(lowIndex), popRandomArrayValue(middleIndex), popRandomArrayValue(highIndex)]
+schema.statics.create = async (tempMatch) => {
+    const lowIndex = [... new Array(4)].map((value, index) => index)
+    const middleIndex = [... new Array(4)].map((value, index) => index+4)
+    const highIndex = [... new Array(4)].map((value, index) => index+8)
+    const getRandomArray = () => {
+      return [popRandomArrayValue(lowIndex), popRandomArrayValue(middleIndex), popRandomArrayValue(highIndex)]
+    }
+    const users = new schema({
+      red : await generateTeam(getRandomArray(), tempMatch, 'red'),
+      blue : await generateTeam(getRandomArray(), tempMatch, 'blue'),
+      green : await generateTeam(getRandomArray(), tempMatch, 'green'),
+      yellow : await generateTeam(getRandomArray(), tempMatch, 'yellow')
+    })
+    return users
   }
 
-  new exports.schema({
-    red : generateTeam(getRandomArray(), tempMatch, 'red'),
-    blue : generateTeam(getRandomArray(), tempMatch, 'blue'),
-    green : generateTeam(getRandomArray(), tempMatch, 'green'),
-    yellow : generateTeam(getRandomArray(), tempMatch, 'yellow')
+// TODO: 입력받은 배열로 팀을 만든다.
+const generateTeam = (indexArr, tempMatch, teamColor) => 
+  new Promise(resolve => {
+    let userGeneratedCount = 0
+    indexArr.map((userIndex, elementIndex) =>  {
+      User.create(tempMatch[userIndex].user, elementIndex)
+      .then(() => {
+        if(++userGeneratedCount === 3) {
+          resolve()
+        } 
+      })
+    })
   })
-}
 
-const generateTeam = (indexArr, tempMatch, team) =>
-  indexArr.map((userIndex, elementIndex) => setUserInTeam(tempMatch[userIndex].user, elementIndex, team))
-
-const setUserInTeam = (user, elementIndex, team) => {
-  user.info.arena.gameID = tempMatch.gameID
-  user.info.arena.isGamePlaying = true
-  user.info.status = 'Arena'
-  user.save()
-  return User.create(user, elementIndex, team)
-}
-
-exports.generateinfoParam = users => {
+schema.methods.generateinfoParam = users => {
   return {
     red : users.red.map(user => User.generateInfo(user)),
     blue : users.blue.map(user => User.generateInfo(user)),

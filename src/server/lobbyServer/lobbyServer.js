@@ -14,7 +14,7 @@ const disconnectSocket = require('../../util/disconnectSocket.js')
 class Server {
   constructor(io, serverName, gameServer) {
     console.log('Lobby Server Name ' + serverName + ' On!')
-    this.arenaManager = new ArenaManager(serverName)
+    this.arenaManager = new ArenaManager(io, serverName, gameServer)
     this.gameServer = gameServer
     this.serverName = serverName
     io.on('connect', this.connectUser)

@@ -1,17 +1,16 @@
 // module
 const mongoose = require('mongoose')
 
-exports.schema = new mongoose.Schema({
+const wealthSchema = new mongoose.Schema({
   money : Number,
   jam : Number,
-  card : [{id : Number, level: Number, exp: Number}], // 보유한 카드의 목록
   profile : [String] // 보유한 프로필의 목록
 })
 
-exports.create = () => 
-  exports.schema({
+wealthSchema.statics.create = () => {
+  return {
     money : 1000,
     jam : 0,
-    character : [],
-    profile : ['Dog']
-  })
+    profile : ['The Light of Dimigo'] // 기본으로 디미고 프로필을 넣어놓는다.
+  }
+} 

@@ -8,8 +8,6 @@ const customMath = require('../../util/customMath.js')
 
 exports.schema = new mongoose.Schema({
   sequence : Array,
-  detail : String,
-  log : String
 })
 
 exports.create = () => 

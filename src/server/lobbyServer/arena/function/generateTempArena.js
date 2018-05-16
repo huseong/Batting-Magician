@@ -18,13 +18,11 @@ module.exports = manager => {
     if(rankOrderedArray.length < 12) // 만약 랭크 배열의 길이가 12이하면 빼버린다.
       break
     const tempMatch = pickUserGroups(rankOrderedArray, rankOrderedArray.indexOf(timeOrderedUser))
-    if(tempMatch) {
-      tempMatch.forEach(user => { 
+    if(tempMatch) { // 임시 매치가 만들어졌다면
+      tempMatch.forEach(user => {
         timeOrderedArray.splice(rankOrderedArray.indexOf(user), 1) // timeOrderedArray 에 만들어진 유저들을 제거한다.
-        checkNotAfk(user, tempMatch, manager) // user가 Afk상태인지 확인한다.
       })
-      tempMatch.isStart = false
-      setTimeout(() => checkMatchStarted(tempMatch, manager), 8000) // 8초 뒤에 게임이 시작한지 확인한다.
+      checkNotAfk(tempMatch)
     }
   })
   waitingPool = [... rankOrderedArray]

@@ -24,7 +24,7 @@ module.exports = (user, tempMatch, manager) => {
         isSomeOneDisconnect = true
         break 
       }
-      user.socket.emit('user not afk', {index : userIndex}) //유저가 탈주하지 않았다는 것 을 알려준다.
+      user.socket.emit('user not afk', { index : userIndex }) //유저가 탈주하지 않았다는 것 을 알려준다.
     })
     if(isSomeOneDisconnect) {
       return cancelMatch(tempMatch)
@@ -37,9 +37,27 @@ module.exports = (user, tempMatch, manager) => {
   user.socket.on('res cancel match', () => cancelMatch(tempMatch, manager))
 }
 
-const whenAllUserNotAfk = (tempMatch, manager) => {
-  Promise.all(tempMatch.map(user => User.checkStatus(user.socket, 'Lobby')))
-  .reject(() => cancelMatch(tempMatch, manager))
-  .then(() => generateMatch(tempMatch, manager))
-   // 이게 실행되는 경우는 모두가 참여한 경우다.
+module.exports = (tempMatch, manager) => {
+  tempMatch.isStart = false // 임시 매치가 시작했는지 확인하는 Flag다.
+  setTimeout(() => {
+    if(!tempMatch.isStart)
+      cancelMatch(tempMatch, manager)
+  }, 8000) // 8초 뒤에 게임이 시작한지 확인한다.
+  tempMatch.notAfkCount = 0
+  tempMatch.forEach(user => {
+    user.socket.join(tempMatch.id) // 모든 유저들을 임시 매치의 ID에 할당시킨다.
+    user.isAfk = true // 유저는 Afk상태가 아니라는 응답이 오기 전까지는 Afk 상태이다.
+    user.socket.on('res user not afk', () => { // Afk 상태가 아니라는 응답을 받으면
+      user.socket.removeAllListeners('res user not afk') // 다시 AFK의 상태가 아니라는 응답을 보낼 수 없도록 리스너를 닫는다.
+      user.isAfk = false
+      manager.io.to(tempMatch.id).emit('user not afk', { index : tempMatch.indexOf(user) })
+      if(++tempMatch.notAfkCount === 12) { // 만약 12명이 모두 Afk 상태가 아니라면
+        generateMatch(tempMatch, manager) // 매치를 만든다.
+      }
+    })
+    user.socket.on('cancel match', () => {
+      user.socket.removeAllListeners('cancel match')
+      cancelMatch(tempMatch, manager)
+    })
+  })
 }

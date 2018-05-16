@@ -9,14 +9,14 @@ module.exports = (socket, waitingPool) => {
         socket : socket,
         isDisconnected : false,
         flag : user.info.arena.flag,
-        availCancel : true, // 유저가 취소를 누를 수 있는지
+        isMatching : false,
         startTime : new Date(), // 매치를 시작한 시간
-        poolIndex : waitingPool.length,
         user : user
       }
       socket.on('disconnect', () => {
-        waitingPool.splice(matchUser.poolIndex, 1) // 배열에서 제거함
-        isDisconnected = true
+        if(!matchUser.isMatching) { // 만약 유저가 매칭 상태가 아니었다면
+          waitingPool.splice(waitingPool.indexOf(matchUser), 1) // 배열에서 제거함
+        } // 만약 매칭 풀이 만들어지고 있던 상태였다면 CheckAFK에서 처리한다.
       })
       waitingPool.push(matchUser)
     })

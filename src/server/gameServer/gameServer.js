@@ -20,8 +20,8 @@ class Server {
   // 유저가 연결 되면 유저가 존재하는 게임이 있는지 확인한다.
   connectUser(socket) {
     User.checkStatus(socket, 'Arena') // 유저가 아레나에 위치해도 되는지 확인한다.
-    .then(checkGameExist(this, ))
-    .then(this.connectUserToArena.bind(undefined, socket))
+    .then(user => checkGameExist(this, user))
+    .then(user => this.connectUserToArena(socket, user))
     .catch(reason => disconnectSocket(socket, reason)) // 만약에 중간에 문제가 생겼다면 연결을 끊는다.
   }
 
@@ -31,13 +31,6 @@ class Server {
 
   connectUserToArena (socket, user) {
     this.arenaList[user.meta.id].connectUser(socket, user)
-  }
-
-  // TODO: 게임이 존재하는지 또는 해당 유저가 그 게임에 들어갈 수 있는지 확인하는 메서드이다.
-  checkGameExist (user) {
-    new Promise((resolve, reject) => {
-
-    })
   }
 }
 
