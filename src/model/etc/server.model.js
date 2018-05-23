@@ -3,7 +3,7 @@
 */
 
 const mongoose = require('mongoose')
-const Error = require('./error.js')
+const Error = require('./error.model.js')
 const schema = new mongoose.Schema({
   info : {
     serverName : String,

@@ -12,12 +12,12 @@ const schema = new mongoose.Schema({
 schema.statics.create = (crackName, userID) => {
   const date = new Date()
   let newCrack = new crack({
-    hackName : name,
+    crackName : crackName,
     id : userID ? userID : "Not Auth",
     date : date.toFormat('YYYY-MM-DD HH24:MI:SS')
   })
   console.log('Created Crack : '+ crackName)
-  newHack.save(err => {
+  newCrack.save(err => {
     if(err)
       console.log('DB Error : ', err)
     })

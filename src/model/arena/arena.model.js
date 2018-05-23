@@ -5,7 +5,7 @@ require('date-utils')
 const mongoose = require('mongoose')
 
 // model
-const Error = require('../../model/error.model.js')
+const Error = require('../etc/error.model.js')
 
 // subModel
 const meta = require('./subModel/meta.subModel.js')
@@ -13,10 +13,10 @@ const map = require('./subModel/map.subModel.js')
 const users = require('./subModel/users.subModel.js')
 
 const schema = new mongoose.Schema({
-  meta : meta.schema,
+  meta : meta,
   info : {
-    map : map.schema,
-    users : users.schema
+    map : map,
+    users : users
   }
 })
 

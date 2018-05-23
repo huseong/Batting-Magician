@@ -6,7 +6,7 @@ const characterSchema = new mongoose.Schema({
   currentCharacterIndex : Number // 현재 사용중인 캐릭터
 })
 
-characterSchema.statics.create = () => {
+characterSchema.create = () => {
   return {
     characterList : [{id : 0, class : 0, level : 1, exp : 0 }], // 기본으로 귀여운 강아지 넣기
     currentCharacter : 0 // 현재 사용중인 캐릭터의 인덱스

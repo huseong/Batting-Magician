@@ -1,7 +1,7 @@
 // model
-const User = require('../../../../model/user.js')
-const Arena = require('../../../../model/arena.js')
-const Error = require('../../../../model/error.js')
+const User = require('../../../../model/user/user.model.js')
+const Arena = require('../../../../model/arena/arena.model.js')
+const Error = require('../../../../model/etc/error.model.js')
 
 module.exports = (tempMatch, manager) => {
   tempMatch.isStart = true // 게임이 시작했음을 알려 매치가 취소되지 않음을 알린다.

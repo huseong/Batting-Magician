@@ -53,9 +53,9 @@ schema.statics.checkStatus = (socket, status) =>
       if(!id)
         return reject(Crack.create('ID Not Found'))
       userModel.findOne({'meta.id' : id}, (err, userModel) => {
-        if(!user) // 이거 못찾으면 크랙유저
+        if(!userModel) // 이거 못찾으면 크랙유저
           return reject(Crack.create('Can Not Find User In Check Status', id))
-        if(user.info.status === status)
+        if(userModel.info.status === status)
           return resolve(userModel)
         else
           return reject(Crack.create('User Location Not Correct', id))
@@ -76,16 +76,19 @@ schema.methods.setUserGamePlaying = function(gameID) {
   })
 }
 
-schema.methods.sendDataForLobby = function() {
-  let param = {
-    meta : {
-      name : this.meta.name,
-      profile : this.meta.profile
-    },
-    wealth : this.info.wealth,
-    arena : this.info.arena
-  }
-  return param
+schema.methods.sendDataForLobby = function(socket) {
+  return new Promise(resolve => {
+    let param = {
+      meta : {
+        name : this.meta.name,
+        profile : this.meta.profile
+      },
+      wealth : this.info.wealth,
+      arena : this.info.arena
+    }
+    socket.emit('res user data', param)
+    resolve(socket)
+  })
 }
 
 const userModel = mongoose.model('user', schema)

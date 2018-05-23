@@ -10,10 +10,10 @@ class FrontServer {
   constructor(io) {
     console.log('Front Server On!')
     io.on('connect', socket => {
-      console.log('User connected. id : ', socket.id)
+      console.log('User Connected. id : ', socket.id)
       checkVersion(socket)
       .then(auth)
-      .then(user => toLobbyServer(socket, user))
+      .then(user => toLobbyServer(user, socket))
       .catch(reason => disconnectSocket(socket, reason))
       socket.on('disconnect', () =>
         console.log('User Disconnected : ', socket.id)

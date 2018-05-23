@@ -8,13 +8,13 @@ const metaSchema = new mongoose.Schema({
   profile : String, // 유저가 현재 설정한 프로필
 })
 
-metaSchema.statics.create = (id, name) => {
+metaSchema.create = (id, name) => {
   return {
     id : id,
     name : name,
     isBanned : false,
     lastEnter : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS'),
-    profile : 'Dog'
+    profile : 'The Light Of Dimigo'
   }
 }
 

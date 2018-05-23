@@ -4,9 +4,9 @@
 const mongoose = require('mongoose')
 
 // function
-const customMath = require('../../util/customMath.js')
+const customMath = require('../../../util/customMath.js')
 
-exports.schema = new mongoose.Schema({
+const schema = new mongoose.Schema({
   sequence : Array,
 })
 
@@ -24,3 +24,5 @@ const generateMapSequence = () => {
   }
   return mapArray
 }
+
+module.exports = schema

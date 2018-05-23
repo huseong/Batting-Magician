@@ -1,6 +1,8 @@
 
 require('date-utils')
 
+const User = require('../../../../model/user/user.model.js')
+
   // TODO: 유저를 매치 풀에 넣는다.
 module.exports = (socket, waitingPool) => {
     User.checkStatus(socket, 'Lobby') // 일단 유저가 로비에 있는지 확인한다.
@@ -19,5 +21,6 @@ module.exports = (socket, waitingPool) => {
         } // 만약 매칭 풀이 만들어지고 있던 상태였다면 CheckAFK에서 처리한다.
       })
       waitingPool.push(matchUser)
+      socket.emit('res user added in pool')
     })
   }

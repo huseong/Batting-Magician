@@ -7,7 +7,7 @@ const arenaSchema = new mongoose.Schema({
   isPlayingArena : Boolean, // 유저의 현재 게임 플레이 여부
 })
 
-arenaSchema.statics.create = () => {
+arenaSchema.create = () => {
   return {
     gameID : -1,
     flag : 0,
@@ -18,9 +18,3 @@ arenaSchema.statics.create = () => {
   
 
 module.exports = arenaSchema
-
-
-
-exports.create = {
-
-}

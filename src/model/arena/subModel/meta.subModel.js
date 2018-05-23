@@ -7,13 +7,12 @@ const metaSchema = new mongoose.Schema({
   date : Date, // 매치 진행 날짜
 })
 
-// TODO: 매치의 메타 정보
-exports.schema = metaSchema 
-
-exports.create = (manager, tempMatch) =>
+metaSchema.create = (manager, tempMatch) =>
   new metaSchema({
     id : tempMatch.id,
     server : manager.serverName,
     date : (new Date()).toFormat('YYYY-MM-DD HH24:MI:SS'),
   })
+
+module.exports = metaSchema
 

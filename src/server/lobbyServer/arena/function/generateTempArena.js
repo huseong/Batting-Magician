@@ -1,10 +1,10 @@
 // TODO: 모든 풀들 중 매치를 만들 조건에 맞는 풀이 있는지 확인한다.
 
 // function
-const generateMatch = requie('./generateMatch.js')
+const generateMatch = require('./generateArena.js')
 const customMath = require('../../../../util/customMath.js')
 const checkNotAfk = require('./checkNotAfk.js')
-const cancelMatch = require('./cancelMatch.js')
+const cancelMatch = require('./cancelArena.js')
 
 module.exports = manager => {
   const waitingPool = manager.waitingPool
@@ -16,7 +16,7 @@ module.exports = manager => {
   const timeOrderedArray = [... waitingPool].sort((a, b) => a.startTime - b.startTime) // 오래 기다린 시간 순서부터 내림차순
   timeOrderedArray.forEach(timeOrderedUser => {
     if(rankOrderedArray.length < 12) // 만약 랭크 배열의 길이가 12이하면 빼버린다.
-      break
+      return
     const tempMatch = pickUserGroups(rankOrderedArray, rankOrderedArray.indexOf(timeOrderedUser))
     if(tempMatch) { // 임시 매치가 만들어졌다면
       tempMatch.forEach(user => {

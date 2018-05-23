@@ -41,3 +41,5 @@ class ArenaManager {
     targetPool.splice(userIndex, 1)
   }
 }
+
+module.exports = ArenaManager

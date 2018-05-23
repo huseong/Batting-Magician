@@ -1,9 +1,8 @@
 require('dotenv').config()
 const Server = require('socket.io')
 const FrontServer = require('./src/server/frontServer/FrontServer.js')
-const lobbyServer = require(serverUrl + 'lobbyServer/main.js')
-// const gameServer = require(serverUrl + 'gameServer/main.js')
-const roomServer = require(serverUrl + 'roomServer/main.js')
+const LobbyServer = require('./src/server/lobbyServer/LobbyServer.js')
+const GameServer = require('./src/server/gameServer/GameServer.js')
 const mongoose = require('mongoose')
 
 mongoose.Promise = global.Promise
@@ -12,8 +11,7 @@ mongoose.connect(process.env.DB, { useMongoClient : true , promiseLibrary : requ
 
 const globalFrontServer = new FrontServer(new Server(process.env.FRONTPORT))
 // 한국 서버
-// const koRoomServer = new roomServer(new Server(process.env.KOROOMPORT), 'KOREA')
-// const koLobbyServer = new lobbyServer(new Server(process.env.KOLOBBYPORT), 'KOREA', koRoomServer)
-// gameServer(new Server(process.env.KOGAMEPORT))
+const koGameServer = new GameServer(new Server(process.env.KOGAMEPORT ), 'KOREA')
+const koLobbyServer = new LobbyServer(new Server(process.env.KOLOBBYPORT), 'KOREA', koGameServer)
 
 

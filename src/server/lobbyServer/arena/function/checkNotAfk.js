@@ -1,9 +1,9 @@
 // model
-const User = require('../../../../model/user.js')
+const User = require('../../../../model/user/user.model.js')
 
 // function
-const generateMatch = require('./generateMatch.js')
-const cancelMatch = require('./cancelMatch.js')
+const generateMatch = require('./generateArena.js')
+const cancelMatch = require('./cancelArena.js')
 
 module.exports = (user, tempMatch, manager) => {
   user.socket.emit('req user not afk')
@@ -22,7 +22,7 @@ module.exports = (user, tempMatch, manager) => {
         isSomeOneAfk = true
       if(user.isDisconnect) {
         isSomeOneDisconnect = true
-        break 
+        return
       }
       user.socket.emit('user not afk', { index : userIndex }) //유저가 탈주하지 않았다는 것 을 알려준다.
     })

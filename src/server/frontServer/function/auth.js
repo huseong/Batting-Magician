@@ -43,8 +43,8 @@ const userCheck = (socket, id) =>
         return reject('DB Error')
       }
     if(!user)  // 만약 유저를 찾을 수 없다면 -> 아직 가입 안한 유저라면
-      return signUp(socket, id).then(toLobbyServer).catch(reject)
-    user.lastEnter = Date.now() // 가입한 유저라면 최근 등장을 갱신하고 저장한다.
+      return signUp(socket, id).then(resolve).catch(reject)
+    user.lastEnter = Date.now() // 가입한 유저라면 최근 접속 시간을 갱신하고 저장한다.
     user.save(err => {
       if(err) {
         Error.create('User DB Error');

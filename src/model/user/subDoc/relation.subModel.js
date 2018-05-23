@@ -7,7 +7,7 @@ const relationSchema = new mongoose.Schema({
   block : Array // 차단한 유저의 목록. 친구 유저의 meta.id가 들어간다.
 })
 
-relationSchema.statics.create = () => {
+relationSchema.create = () => {
   return {
     friend : [],
     block : []

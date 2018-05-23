@@ -8,13 +8,13 @@ const User = require('./user.subModel.js')
 const popRandomArrayValue = require('../../../util/customMath.js').popRandomArrayValue
 
 const schema = new mongoose.Schema({
-  red : [User.schema],
-  blue : [User.schema],
-  green : [User.schema],
-  yellow : [User.schema]
+  red : [User],
+  blue : [User],
+  green : [User],
+  yellow : [User]
 })
 
-schema.statics.create = async (tempMatch) => {
+schema.create = async (tempMatch) => {
     const lowIndex = [... new Array(4)].map((value, index) => index)
     const middleIndex = [... new Array(4)].map((value, index) => index+4)
     const highIndex = [... new Array(4)].map((value, index) => index+8)
@@ -44,7 +44,7 @@ const generateTeam = (indexArr, tempMatch, teamColor) =>
     })
   })
 
-schema.methods.generateinfoParam = users => {
+const generateinfoParam = users => {
   return {
     red : users.red.map(user => User.generateInfo(user)),
     blue : users.blue.map(user => User.generateInfo(user)),
@@ -52,3 +52,5 @@ schema.methods.generateinfoParam = users => {
     yellow : users.yellow.map(user => User.generateInfo(user))
   }
 }
+
+module.exports = schema

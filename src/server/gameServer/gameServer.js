@@ -1,10 +1,10 @@
 
 // model
-const User = require('../../model/user.js')
-const Crack = require('../../model/crack.js')
+const User = require('../../model/user/user.model.js')
+const Crack = require('../../model/etc/crack.model.js')
 
 // class
-const Arena = require('./class/arena.class.js')
+const Arena = require('./class/arena/arena.class.js')
 
 // function
 const disconnectSocket = require('../../util/disconnectSocket.js')

@@ -1,12 +1,12 @@
 // function
 const readyForGame = require('./function/readyForGame.js')
-const findUserTeam = require('./function/findUserTeam.js')
+// const findUserTeam = require('./function/findUserTeam.js')
 
 // model
-const UserModel = require('../../../model/user/user.model.js')
+const UserModel = require('../../../../model/user/user.model.js')
 
 // class
-const User = require('./user.class.js')
+const User = require('../user/user.class.js')
 
 class Arena {
   constructor(arenaModel, io) {
