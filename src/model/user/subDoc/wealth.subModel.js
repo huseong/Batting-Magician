@@ -15,4 +15,28 @@ wealthSchema.create = () => {
   }
 }
 
+wealthSchema.sendData = (socket, user) =>
+  new Promise(resolve => {
+    socket.emit('update money', { money : user.wealth.money })
+    socket.emit('update jam', { jam : user.wealth.jam })
+    resolve()
+  })
+
+wealthSchema.setMoney = (socket, user, money) =>
+  new Promise(resolve => {
+    user.wealth.money = money
+    user.save(err => {
+      socket.emit('update money', { money : money })
+      resolve()
+    })
+  })
+
+wealthSchema.setJam = (socket, user, jam) =>
+  new Promise(resolve => {
+    user.wealth.jam = jam
+    user.save(err => {
+      socket.emit('update jam', { jam : jam })
+    })
+  })
+
 module.exports = wealthSchema

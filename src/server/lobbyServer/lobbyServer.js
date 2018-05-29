@@ -22,7 +22,6 @@ class LobbyServer {
     console.log('user connected in Lobby Server : ', socket.id)
     User.checkStatus(socket, 'Lobby') // 유저가 로비에 있어도 되는 유저인지 확인한다.
     .then(user => setSocket(socket, user, this.serverName, this.arenaManager))
-    .then(user => user.sendDataForLobby(socket))
     .catch(reason => disconnectSocket(socket, reason))
   }
 }

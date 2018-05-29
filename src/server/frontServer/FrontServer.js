@@ -13,7 +13,8 @@ class FrontServer {
       console.log('User Connected. id : ', socket.id)
       checkVersion(socket)
       .then(auth)
-      .then(user => toLobbyServer(user, socket))
+      .then(user => user.sendAllData(socket))
+      .then(user => toLobbyServer(socket, user))
       .catch(reason => disconnectSocket(socket, reason))
       socket.on('disconnect', () =>
         console.log('User Disconnected : ', socket.id)

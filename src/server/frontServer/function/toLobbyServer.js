@@ -1,8 +1,8 @@
 const Error = require('../../../model/etc/error.model.js')
 
-module.exports = (user, socket) => 
+module.exports = (socket, user) => 
   new Promise((resolve, reject) => {
-    user.info.status = 'Lobby' // 유저의 상태를 로비로 바꿔놓는다.
+    user.meta.status = 'Lobby' // 유저의 상태를 로비로 바꿔놓는다.
     user.save(err => {
       if(err) {
         Error.create('User DB Error')

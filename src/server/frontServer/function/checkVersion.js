@@ -12,7 +12,7 @@ module.exports = socket =>  // 클라이언트의 버전을 확인하는 함수
     setTimeout(() => { // 5초 안에 클라이언트로부터 답이 오지 않으면 연결을 끊는다.
       if(!socket.isVersionChecked)
         reject('no response') // 응답없음
-    }, 5000)
+    }, 10000)
     socket.on('res version', ({ version }) => { // 버전 정보를 받아서
       const isCurrentVersion = serverVersion === version
       socket.emit('res version result', { result : isCurrentVersion }) // 처리 결과를 보내주고

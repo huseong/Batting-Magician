@@ -7,39 +7,32 @@ const Crack = require('../etc/crack.model.js')
 const Error = require('../etc/error.model.js')
 
 // subDoc
-const meta = require('./subDoc/meta.subModel.js')
-const wealth = require('./subDoc/wealth.subModel.js')
-const relation = require('./subDoc/relation.subModel.js')
-const arena = require('./subDoc/arena.subModel.js')
-const deck = require('./subDoc/deck.subModel.js')
+const metaSchema = require('./subDoc/meta.subModel')
+const wealthSchema = require('./subDoc/wealth.subModel.js')
+const relationSchema = require('./subDoc/relation/relation.subModel.js')
+const arenaSchema = require('./subDoc/arena.subModel.js')
+const deckSchema = require('./subDoc/deck.subModel.js')
 
 const schema = new mongoose.Schema({
-  meta : meta, // 유저에 대한 메타 정보
-  info : {
-    wealth : wealth, // 보유한 재산에 관련된 것
-    relation : relation, // 
-    arena : arena, // 아레나에 관한 것
-    deck : deck,
-    achieve : Number, // 유저가 성취한 업적
-    status : String, // 유저의 상태
-  },
+  meta : metaSchema, // 유저에 대한 메타 정보
+  wealth : wealthSchema, // 보유한 재산에 관련된 것
+  relation : relationSchema, // 
+  arena : arenaSchema, // 아레나에 관한 것
+  deck : deckSchema
 })
 
 schema.statics.create = (id, name) => 
-  new Promise((resolve, reject) => {
-    const newUserModel = new userModel({
-      meta : meta.create(id, name),
-      info : {
-        wealth : wealth.create(),
-        relation : relation.create(),
-        arena : arena.create(),
-        deck : deck.create(),
-        status : 'Lobby'
-      },
+  new Promise(async resolve => {
+    const newUser = new User({
+      meta : metaSchema.create(id, name),
+      wealth : wealthSchema.create(),
+      relation : relationSchema.create(),
+      arena : arenaSchema.create(),
+      deck : deckSchema.create()
     })
-    newUserModel.save(err => {
+    newUser.save(err => {
       if(!err)
-        resolve(newUserModel)
+        resolve(newUser)
     })
   })
 
@@ -52,11 +45,11 @@ schema.statics.checkStatus = (socket, status) =>
     socket.on('get google', ({id}) => {
       if(!id)
         return reject(Crack.create('ID Not Found'))
-      userModel.findOne({'meta.id' : id}, (err, userModel) => {
-        if(!userModel) // 이거 못찾으면 크랙유저
+      User.findOne({'meta.id' : id}, (err, user) => {
+        if(!user) // 이거 못찾으면 크랙유저
           return reject(Crack.create('Can Not Find User In Check Status', id))
-        if(userModel.info.status === status)
-          return resolve(userModel)
+        if(user.meta.status === status)
+          return resolve(user)
         else
           return reject(Crack.create('User Location Not Correct', id))
       })
@@ -64,32 +57,28 @@ schema.statics.checkStatus = (socket, status) =>
   })
 
 // TODO: 사용자가 게임을 플레이한다는 것을 DB 상에서 업데이트함.
-schema.methods.setUserGamePlaying = function(gameID) {
+// schema.methods.setUserGamePlaying = function(gameID) {
+//   return new Promise(resolve => {
+//     user.info.arena.gameID = gameID
+//     user.info.arena.isGamePlaying = true
+//     user.meta.status = 'Arena'
+//     user.save(err => {
+//       if(!err)
+//         resolve()
+//     })
+//   })
+// }
+
+// TODO: 클라이언트로 모든 정보를 한 번 보낸다.
+schema.methods.sendAllData = function(socket) {
   return new Promise(resolve => {
-    user.info.arena.gameID = gameID
-    user.info.arena.isGamePlaying = true
-    user.info.status = 'Arena'
-    user.save(err => {
-      if(!err)
-        resolve()
-    })
+    metaSchema.sendData(socket, this)
+    .then(() => wealthSchema.sendData(socket, this))
+    .then(() => relationSchema.sendData(socket, this))
+    .then(resolve)
+    resolve(this)
   })
 }
 
-schema.methods.sendDataForLobby = function(socket) {
-  return new Promise(resolve => {
-    let param = {
-      meta : {
-        name : this.meta.name,
-        profile : this.meta.profile
-      },
-      wealth : this.info.wealth,
-      arena : this.info.arena
-    }
-    socket.emit('res user data', param)
-    resolve(socket)
-  })
-}
-
-const userModel = mongoose.model('user', schema)
-module.exports = userModel
+const User = mongoose.model('user', schema)
+module.exports = User

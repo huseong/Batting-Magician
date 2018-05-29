@@ -29,16 +29,17 @@ class ArenaManager {
   }
 
   connectSocket(socket) { // 기본적으로 유저의 요청을 받을 수 있는 리스너를 열어준다. 
-    socket.on('add waiting pool', () => setUserToWaitingPool(socket, this.waitingPool))
-    socket.on('cancel find match', () => this.cancelFindingMatch(socket))
+    socket.on('req add waiting pool', () => setUserToWaitingPool(socket, this.waitingPool))
+    socket.on('req cancel match', () => this.cancelFindingMatch(socket))
   }
 
   // TODO: 매치 찾는 걸 취소하면.
   cancelFindingMatch(socket) {
     const userIndex = this.waitingPool.findIndex(user => user.socket === socket) // socket으로 유저를 찾아온다.
-    if(!this.waitingPool[userIndex].availCancel)
-      return
-    targetPool.splice(userIndex, 1)
+    // if(!this.waitingPool[userIndex].availCancel)
+    //   return
+    this.waitingPool.splice(userIndex, 1)
+    socket.emit('res cancel match successful')
   }
 }
 
